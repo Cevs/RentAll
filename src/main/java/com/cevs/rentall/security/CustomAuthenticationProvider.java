@@ -15,9 +15,14 @@ public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication auth) throws AuthenticationException {
-        User user = userDao.findUserByEmail(auth.getName());
-        //Authorization process
-        final Authentication result = super.authenticate(auth);
-        return new UsernamePasswordAuthenticationToken(user, result.getCredentials(), result.getAuthorities());
+        try{
+            User user = userDao.findUserByEmail(auth.getName());
+            //Authorization process
+            final Authentication result = super.authenticate(auth);
+            return new UsernamePasswordAuthenticationToken(user, result.getCredentials(), result.getAuthorities());
+        }catch (Exception ex){
+            throw new BadCredentialsException("Invalid username or password");
+        }
+
     }
 }

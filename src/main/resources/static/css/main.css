@@ -1,0 +1,45 @@
+.login-form {
+    height: 100% !important;
+}
+
+.container {
+    height: 100% !important;
+    margin-top: -57px;
+    padding-top:57px;
+}
+
+.card-header{
+    background-color: #343a40 !important;
+    color:white !important;
+}
+
+
+
+body{
+    background-color: #F8F8F8 !important;
+}
+
+
+body, html, form {
+    height: 100% !important;
+}
+
+
+.info {
+    font-weight: bold;
+    color: green;
+}
+
+.warn {
+    font-weight: bold;
+    color: orange;
+}
+
+.err {
+    font-weight: bold;
+    color: red;
+}
+
+.table-column {
+    width: 25%;
+}

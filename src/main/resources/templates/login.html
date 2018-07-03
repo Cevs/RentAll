@@ -3,12 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
 </head>
 <body>
-    <form th:action="@{/login}" method="post">
-        <input type="text" id="username" name="username" placeholder="email"/>
-        <input type="password" id="password" name="password" placeholder="password"/>
-        <button type="submit" >login</button>
-    </form>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
+            aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+        <a class="navbar-brand" href="#">Hidden brand</a>
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Disabled</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row h-100">
+        <div class="col-7 my-auto mx-auto">
+            <form th:action="@{/login}" method="post">
+                <div class="card bg-basic shadow bg-white rounded">
+                    <div class="card-header">
+                        <h3 class="card-title text-center" style="margin:0px;">Login</h3>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="form-group">
+                            <label for="email"><strong>Email</strong></label>
+                            <input type="text" class="form-control w-75 mx-auto text-center" id="email" name="username"
+                                   placeholder="Email"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="password"><strong>Password</strong></label>
+                            <input type="password" class="form-control w-75 mx-auto text-center" id="password"
+                                   name="password" placeholder="********"/>
+                        </div>
+                        <button type="submit" class="btn btn-success mb-3 w-50">Login</button>
+                        <p id="create-account" class="m-0">Not registered? <strong><a th:href="@{/user/registration}">Create
+                            an account</a></strong></p>
+                        <div th:if="${param.error}" class="alert alert-danger login-message mt-3">
+                            <strong><p class="p-0 m-0">Invalid credentials</p></strong>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
 </body>
 </html>
