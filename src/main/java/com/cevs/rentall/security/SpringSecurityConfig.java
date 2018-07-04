@@ -18,6 +18,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authProvider());
@@ -33,9 +34,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .formLogin()
                         .loginPage("/login")
-                        .defaultSuccessUrl("/index")
-                        .failureUrl("/login?error=true");
-
+                        .defaultSuccessUrl("/index",true)
+                        .failureUrl("/login?error=true")
+                .and()
+                .logout()
+                    .logoutSuccessUrl("/login")
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID")
+                    .permitAll();
     }
 
     @Bean
