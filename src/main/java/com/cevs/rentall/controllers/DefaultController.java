@@ -11,8 +11,8 @@ public class DefaultController {
         return "index";
     }
 
-    @GetMapping("/login")
-    public String login(){
-        return "login";
+    @GetMapping("/registration")
+    public String registration(){
+        return "registration";
     }
 }

@@ -6,14 +6,47 @@
     height: 100% !important;
     margin-top: -57px;
     padding-top:57px;
+
+    padding-bottom:20px;
 }
 
+.row{
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+}
+.registration-form{
+    height: 100% !important;
+    margin-top:50px;
+}
 .card-header{
-    background-color: #343a40 !important;
+    background-color: #777F87 !important;
     color:white !important;
 }
 
+.registration-card-buyer:hover{
+    background-color: #254b3d;
+    font-size: 20px;
+    color:#254b3d;
+}
 
+.registration-warning{
+    color:red;
+    font-weight: bold;
+}
+
+.registration-card-renter:hover{
+    background-color: #3f394f;
+    font-size: 20px;
+    color:#3f394f;
+}
+
+.registration-info-renter:hover{
+
+}
+
+.card{
+    margin-bottom: 50px;
+}
 
 body{
     background-color: #F8F8F8 !important;

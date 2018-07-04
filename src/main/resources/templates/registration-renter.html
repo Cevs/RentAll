@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Registration</title>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
+</head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
+                    aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                <a class="navbar-brand" href="#">Hidden brand</a>
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#">Disabled</a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </div>
+        </nav>
+
+        <div>
+            <form class="registration-form" action="/registration/renter" th:object="${renterDto}" method="POST" enctype="utf8"
+                  novalidate="novalidate">
+                <h1 class="text-center mb-5">Registration</h1>
+                <div class="row h-100">
+                    <div class="col-5 my-auto mx-auto" style="float:left;">
+                        <div class="card bg-basic shadow bg-white rounded">
+                            <div class="card-header">
+                                <h4 class="card-title text-center m-0">Profile information</h4>
+                            </div>
+                            <div class="card-body text-center">
+
+                                <div class="form-group">
+                                    <label for="companyName"><strong>Company Name*</strong></label>
+                                    <input id="companyName" th:field="*{companyName}" type="text" class="form-control text-center"
+                                           placeholder="Company Name"/>
+                                    <p class="registration-warning" th:if="${#fields.hasErrors('companyName')}" th:errors="*{companyName}"></p>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="companyPhoneNumber"><strong>Compnay Phone Number*</strong></label>
+                                    <input id="companyPhoneNumber" th:field="*{companyPhoneNumber}"  type="text" class="form-control text-center"
+                                           placeholder="Compnay Phone Number"/>
+                                    <p class="registration-warning" th:if="${#fields.hasErrors('companyPhoneNumber')}" th:errors="*{companyPhoneNumber}"></p>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="bankAccount"><strong>Bank account*</strong></label>
+                                    <input id="bankAccount" th:field="*{bankAccount}"  type="text" class="form-control text-center"
+                                           placeholder="Bank account"/>
+                                    <p class="registration-warning" th:if="${#fields.hasErrors('bankAccount')}" th:errors="*{bankAccount}"></p>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="country"><strong>Country*</strong></label>
+                                    <input id="country" th:field="*{country}" type="text" class="form-control text-center"
+                                           placeholder="Country"/>
+                                    <p class="registration-warning" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></p>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="city"><strong>City*</strong></label>
+                                    <input id="city" th:field="*{city}" type="text" class="form-control text-center"
+                                           placeholder="Country"/>
+                                    <p class="registration-warning" th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></p>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="address"><strong>Address*</strong></label>
+                                    <input id="address" th:field="*{address}" type="text" class="form-control text-center"
+                                           placeholder="Address"/>
+                                    <p class="registration-warning" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></p>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="zipCode"><strong>Zip code*</strong></label>
+                                    <input id="zipCode" th:field="*{zipCode}" type="text" class="form-control text-center"
+                                           placeholder="Zip Code"/>
+                                    <p class="registration-warning" th:if="${#fields.hasErrors('zipCode')}" th:errors="*{zipCode}"></p>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-5 my-auto mx-auto">
+                        <div class="card bg-basic shadow bg-white rounded">
+                            <div class="card-header">
+                                <h4 class="card-title text-center m-0">Account information</h4>
+                            </div>
+                            <div class="card-body text-center">
+
+                                <div class="form-group">
+                                    <label for="email"><strong>Email*</strong></label>
+                                    <input type="text" class="form-control text-center" id="email" th:field="*{email}"
+                                           placeholder="example@gmail.com"/>
+                                    <p class="registration-warning" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="password"><strong>Password*</strong></label>
+                                    <input type="password" class="form-control text-center" id="password" th:field="*{password}"
+                                           placeholder="*****"/>
+                                    <p class="registration-warning" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="rePassword"><strong>re-Password*</strong></label>
+                                    <input type="password" class="form-control text-center" id="rePassword"  th:field="*{rePassword}"
+                                           placeholder="*****"/>
+                                    <p class="registration-warning" th:if="${#fields.hasErrors('global')}" th:errors="*{global}"></p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card bg-basic shadow bg-white rounded">
+                            <div class="card-header">
+                                <h4 class="card-title text-center m-0">Finish registration</h4>
+                            </div>
+                            <div class="card-body text-center">
+                                <button type="submit" class="btn btn-info w-50 mx-auto">Register</button>
+                                <p class="message m-0 text-center">Already registered? <a th:href="@{/login}"><strong>Sign
+                                    In</strong></a></p>
+                                <div th:if="${message}" class="alert alert-danger login-message mt-3">
+                                    <strong><p class="p-0 m-0" th:text="${message}"/></strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+                crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+                integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+                crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+                integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+                crossorigin="anonymous"></script>
+    </body>
+</html>

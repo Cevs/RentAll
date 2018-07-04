@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Registration</title>
     <link rel="stylesheet" type="text/css" href="/css/main.css"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
           integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
 </head>
 <body>
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
             aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,42 +33,40 @@
         </form>
     </div>
 </nav>
-
 <div class="container">
     <div class="row h-100">
-        <div class="col-7 my-auto mx-auto">
-            <form th:action="@{/login}" method="post">
-                <div class="card bg-basic shadow bg-white rounded">
-                    <div class="card-header">
-                        <h3 class="card-title text-center" style="margin:0px;">Login</h3>
-                    </div>
-                    <div class="card-body text-center">
-                        <div class="form-group">
-                            <label for="email"><strong>Email</strong></label>
-                            <input type="text" class="form-control w-75 mx-auto text-center" id="email" name="username"
-                                   placeholder="Email"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="password"><strong>Password</strong></label>
-                            <input type="password" class="form-control w-75 mx-auto text-center" id="password"
-                                   name="password" placeholder="********"/>
-                        </div>
-                        <button type="submit" class="btn btn-success mb-3 w-50">Login</button>
-                        <p id="create-account" class="m-0">Not registered? <strong><a th:href="@{/registration}">Create
-                            an account</a></strong></p>
-                        <div th:if="${param.error}" class="alert alert-danger login-message mt-3">
-                            <strong><p class="p-0 m-0">Invalid credentials</p></strong>
-                        </div>
-                        <div th:if="${message}" class="alert alert-success login-message mt-3">
-                            <strong><p class="p-0 m-0" th:text="${message}"/></strong>
-                        </div>
-                    </div>
+        <div class="my-auto mx-auto">
+            <h1 class="text-center pb-5"><strong>Select type of an account</strong></h1>
+            <div class="card shadow  rounded mr-5 registration-card-renter" style="width:500px; height:250px; float:left;">
+                <a href="/registration/renter" class="h-100 p-3">
+                    <img class="card-img h-100"
+                         src="https://www.mcgroupltd.co.uk/assets/img/hero-banner-overlay.png?mode=crop&width=1400&&upscale=false&slimmage=true"
+                         alt="Card image">
+                </a>
+                <div class="p-3">
+                    <h3>Renter</h3>
+                    <ul>
+                        <li>Post your rental vehicles</li>
+                        <li>Rent vehicles</li>
+                    </ul>
                 </div>
-            </form>
+            </div>
+            <div class="card shadow rounded registration-card-buyer" style="width:500px; height:250px;">
+                <a href="/registration/buyer" class="h-100 p-3">
+                    <img class="card-img h-100"
+                         src="http://pluspng.com/img-png/handshake-png-hd-handshake-png-hands-image-free-download-3056.png" alt="Card image">
+                </a>
+                <div class="p-3">
+                    <h3>Customer</h3>
+                    <ul>
+                        <li>Search for the vehicles</li>
+                        <li>Reserve a vehicle</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
