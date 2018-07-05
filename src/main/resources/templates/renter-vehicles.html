@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Vehicles</title>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
+            aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+        <a class="navbar-brand" href="">RentAll</a>
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li sec:authorize="hasAuthority('Renter')" class="nav-item active">
+                <a class="nav-link" href="#">Index <span class="sr-only">(current)</span></a>
+            </li>
+            <li sec:authorize="hasAuthority('Renter')" class="nav-item">
+                <a class="nav-link" href="/renter/vehicle">Vehicles</a>
+            </li>
+            <li sec:authorize="hasAuthority('Renter')" class="nav-item">
+                <a class="nav-link disabled" href="#">Disabled</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="post">
+            <p class="m-0 navbar-user"><span sec:authentication="principal.email"></span></p>
+            <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Logout</button>
+        </form>
+    </div>
+</nav>
+<div class="container">
+    <h1 class="text-center mb-5 mt-5">Vehicles</h1>
+    <div class="dropdown">
+        <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+            New Vehicle
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" id="addNewCar">Car</a>
+            <a class="dropdown-item" id="addNewTruck">Truck</a>
+            <a class="dropdown-item" id="addNewBus">Bus</a>
+        </div>
+        <div id="insertSuccess"  class="alert alert-success login-message mt-3">
+            <strong><p class="p-0 m-0 text-center">Insert Successful</p></strong>
+        </div>
+        <div id="insertError" class="alert alert-danger login-message mt-3">
+            <strong><p class="p-0 m-0 text-center">Insert Failed</p></strong>
+        </div>
+    </div>
+
+    <table id="vehicleTable"
+           class="table table-hover table-light shadow bg-white rounded table-responsive-sm table-responsive-md">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Manufacture</th>
+            <th>Year</th>
+            <th>Registration Plate</th>
+            <th>Type</th>
+            <th>Subtype</th>
+            <th>Available</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item,i : ${vehicles}" class="bg-light">
+            <th th:text="${i.count}" scope="row"></th>
+            <td th:text="${item.manufacturer}" id="tableManufacturer"></td>
+            <td th:text="${item.year}" id="tableYear"></td>
+            <td th:text="${item.registrationPlate}" id="tableRegistrationPlate"></td>
+            <td th:text="${item.vehicleType}" id="tableType"></td>
+            <td th:text="${item.vehicleSubtype}" id="tableSubtype"></td>
+            <td th:text="${item.available}" id="tableAvailable"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!-- Modal add new Car -->
+<form id="formAddNewCar" th:object="${carDto}" enctype="utf8">
+    <div class="modal fade" id="modalInsertVehicle" tabindex="-1" role="dialog"
+         aria-labelledby="modalInsertVehicleInsertCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalInsertVehicleInsertLongTitle"><strong>New Car</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="newManufacturer">Manufacturer</label>
+                            <input id="newManufacturer" type="text" name="manufacturer" class="form-control">
+                            <p id="manufacturer_error_message" class="registration-alert"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="newYear">year</label>
+                            <input id="newYear" type="number" name="year" class="form-control">
+                            <p id="year_error_message" class="registration-alert"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="newFuelTank">Fuel tank</label>
+                            <input id="newFuelTank" type="number" name="fuelTank" class="form-control">
+                            <p id="fuel_tank_error_message" class="registration-alert"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="newMileage">mileage</label>
+                            <input id="newMileage" type="number" name="mileage" class="form-control">
+                            <p id="mileage_error_message" class="registration-alert"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="newEngine">Engine</label>
+                            <input id="newEngine" type="text" name="engine" class="form-control">
+                            <p id="engine_error_message" class="registration-alert"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="newFuelConsumption">Fuel Consumption</label>
+                            <input id="newFuelConsumption" type="number" name="fuelConsumption" class="form-control">
+                            <p id="fuel_consumption_error_message" class="registration-alert"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="newSpareTires">Spare Tires</label>
+                            <input id="newSpareTires" type="number" name="spareTires" class="form-control">
+                            <p id="spare_tires_error_message" class="registration-alert"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="newWeight">Weight</label>
+                            <input id="newWeight" type="number" name="weight" class="form-control">
+                            <p id="weight_error_message" class="registration-alert"></p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="newPayloadCapacity">Payload Capacity</label>
+                            <input id="newPayloadCapacity" type="number" name="payloadCapacity" class="form-control">
+                            <p id="payload_capacity_error_message" class="registration-alert"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="newAdditionalEquipment">Additional Equipment</label>
+                            <input id="newAdditionalEquipment" type="text" name="additionalEquipment"
+                                   class="form-control">
+                            <p id="additional_equipment_error_message" class="registration-alert"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="newRegistrationPlate">Registration Plate</label>
+                            <input id="newRegistrationPlate" type="text" name="registrationPlate" class="form-control">
+                            <p id="registration_plate_error_message" class="registration-alert"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="newDoors">Number of doors</label>
+                            <input id="newDoors" type="number" name="doors" class="form-control">
+                            <p id="doors_error_message" class="registration-alert"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="newColor">Color</label>
+                            <input id="newColor" type="text" name="color" class="form-control">
+                            <p id="color_error_message" class="registration-alert"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="newTrunkCapacity">Trunk capacity</label>
+                            <input id="newTrunkCapacity" type="number" name="trunkCapacity" class="form-control">
+                            <p id="trunk_error_message" class="registration-alert"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="newCarType">Type of Car</label>
+                            <select class="custom-select" id="newCarType" name="vehicleSubtype">
+                                <option value="Caravan">Caravan</option>
+                                <option value="Limousine">Limousine</option>
+                                <option value="Delivery">Delivery</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="newAvailable">Available</label>
+                            <select class="custom-select" id="newAvailable" name="available">
+                                <option value="true">Yes</option>
+                                <option value="false">No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="buttonModalClose" type="button" class="btn btn-danger" data-dismiss="modal">Close
+                    </button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/vehicleDatatable.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>

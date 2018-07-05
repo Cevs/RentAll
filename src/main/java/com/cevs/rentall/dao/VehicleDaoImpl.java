@@ -1,0 +1,75 @@
+package com.cevs.rentall.dao;
+
+import com.cevs.rentall.database.Database;
+import com.cevs.rentall.models.Car;
+import com.cevs.rentall.models.Vehicle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class VehicleDaoImpl implements VehicleDao {
+
+    @Autowired
+    Database db;
+
+    @Override
+    public List<Vehicle> getRenterVehicles(int renterId) {
+        List<Vehicle> vehicles = new ArrayList<Vehicle>();
+        String sql = "SELECT *FROM vehicles WHERE renter_id = ?";
+        try(Connection conn = db.openConnection();
+            PreparedStatement ps = conn.prepareCall(sql)){
+            ps.setInt(1, renterId);
+            ResultSet rs  = ps.executeQuery();
+            while(rs.next()){
+                Vehicle v = new Vehicle();
+                v.setManufacturer(rs.getString("manufacturer"));
+                v.setYear(rs.getInt("year"));
+                v.setRegistrationPlate(rs.getString("registration_plate"));
+                v.setVehicleType(rs.getString("vehicle_type"));
+                v.setVehicleSubtype(rs.getString("vehicle_subtype"));
+                v.setAvailable(rs.getBoolean("available"));
+
+                vehicles.add(v);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return vehicles;
+    }
+
+    @Override
+    public void insertCar(Car car) throws SQLException {
+        String sql = "INSERT INTO cars (manufacturer, year, fuel_tank, mileage, engine, fuel_consumption, " +
+                "spare_tires, weight, payload_capacity, additional_equipment, registration_plate, " +
+                "vehicle_type, vehicle_subtype, available, renter_id, doors, color, trunk_capacity) " +
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        try(Connection conn=db.openConnection();
+        PreparedStatement ps = conn.prepareCall(sql);){
+            ps.setString(1,car.getManufacturer());
+            ps.setInt(2,car.getYear());
+            ps.setInt(3,car.getFuelTank());
+            ps.setInt(4,car.getMileage());
+            ps.setString(5,car.getEngine());
+            ps.setInt(6,car.getFuelConsumption());
+            ps.setInt(7,car.getSpareTires());
+            ps.setInt(8, car.getWeight());
+            ps.setInt(9,car.getPayloadCapacitiy());
+            ps.setString(10,car.getAdditionalEquipment());
+            ps.setString(11,car.getRegistrationPlate());
+            ps.setObject(12,car.getVehicleType(), Types.OTHER);
+            ps.setObject(13,car.getVehicleSubtype(), Types.OTHER);
+            ps.setBoolean(14,car.isAvailable());
+            ps.setInt(15,car.getRenterId());
+            ps.setInt(16,car.getDoors());
+            ps.setString(17,car.getColor());
+            ps.setInt(18,car.getTrunkCapacity());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Insert failed");
+        }
+    }
+}

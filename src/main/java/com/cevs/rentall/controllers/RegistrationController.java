@@ -49,7 +49,7 @@ public class RegistrationController {
     }
 
     @RequestMapping(path = {"/registration/renter"}, method = RequestMethod.POST)
-    public String  registrationRenter(@Valid RenterDto renterDto, BindingResult bindingResult,
+    public String registrationRenter(@Valid RenterDto renterDto, BindingResult bindingResult,
                                       ModelMap model, RedirectAttributes ra){
         if(!bindingResult.hasErrors()){
             boolean registrationSuccess = userService.registerRenter(renterDto);

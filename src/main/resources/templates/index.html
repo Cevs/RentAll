@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Index</title>
@@ -17,17 +17,18 @@
     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
         <a class="navbar-brand" href="">RentAll</a>
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            <li sec:authorize="hasAuthority('Renter')" class="nav-item active">
+                <a class="nav-link" href="#">Index <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+            <li  sec:authorize="hasAuthority('Renter')"class="nav-item">
+                <a class="nav-link" href="/renter/vehicle">Vehicles</a>
             </li>
-            <li class="nav-item">
+            <li  sec:authorize="hasAuthority('Renter')" class="nav-item">
                 <a class="nav-link disabled" href="#">Disabled</a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="post">
+            <p class="m-0 navbar-user"><span sec:authentication="principal.email"></span></p>
             <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Logout</button>
         </form>
     </div>
@@ -36,6 +37,7 @@
     <h1>
         Index
     </h1>
+    Roles: <span sec:authentication="principal.userType">[ROLE_USER, ROLE_ADMIN]</span>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

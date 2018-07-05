@@ -76,3 +76,9 @@ body, html, form {
 .table-column {
     width: 25%;
 }
+
+.navbar-user{
+    font-size:18px;
+    color: white;
+    padding-right: 10px;
+}
