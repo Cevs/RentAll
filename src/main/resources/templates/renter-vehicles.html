@@ -82,7 +82,7 @@
 <form id="formAddNewCar" th:object="${carDto}" enctype="utf8">
     <div class="modal fade" id="modalInsertVehicle" tabindex="-1" role="dialog"
          aria-labelledby="modalInsertVehicleInsertCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalInsertVehicleInsertLongTitle"><strong>New Car</strong></h5>
@@ -91,66 +91,7 @@
                     </button>
                 </div>
                 <div class="modal-body row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label >Manufacturer</label>
-                            <input type="text" name="manufacturer" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label >year</label>
-                            <input  type="number" name="year" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label >Fuel tank</label>
-                            <input  type="number" value = "0" placeholder="0" name="fuelTank" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label >mileage</label>
-                            <input type="number" value = "0" placeholder="0" name="mileage" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label >Engine</label>
-                            <input type="text" name="engine" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label >Fuel Consumption</label>
-                            <input  type="number" value = "0" placeholder="0"  name="fuelConsumption" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label >Spare Tires</label>
-                            <input  type="number" value = "0" placeholder="0"  name="spareTires" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label >Weight</label>
-                            <input type="number" value = "0" placeholder="0"  name="weight" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label >Payload Capacity</label>
-                            <input  type="number" name="payloadCapacity" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label >Additional Equipment</label>
-                            <input type="text" name="additionalEquipment" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label >Registration Plate</label>
-                            <input  type="text" name="registrationPlate" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label >Number of doors</label>
-                            <input  type="number" name="doors" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label >Color</label>
-                            <input type="text" name="color" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label >Trunk capacity</label>
-                            <input  type="number" name="trunkCapacity" class="form-control">
-                        </div>
+                    <div class="col-lg-4">
                         <div class="form-group">
                             <label >Type of Car</label>
                             <select class="custom-select" name="vehicleSubtype">
@@ -165,6 +106,67 @@
                                 <option value="true">Yes</option>
                                 <option value="false">No</option>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label >Manufacturer</label>
+                            <input type="text" name="manufacturer" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>year (yyyy)</label>
+                            <input  type="number" name="year" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Engine</label>
+                            <input type="text" name="engine" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Fuel tank (L)</label>
+                            <input  type="number" placeholder="0" value="0" name="fuelTank" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label >Fuel Consumption (L/100km)</label>
+                            <input  type="number" placeholder="0" value="0" name="fuelConsumption" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label >Registration Plate</label>
+                            <input  type="text" name="registrationPlate" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label >mileage (km)</label>
+                            <input type="number" placeholder="0" value="0" name="mileage" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label >Spare Tires</label>
+                            <input  type="number" placeholder="0" value="0" name="spareTires" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label >Weight (kg)</label>
+                            <input type="number" placeholder="0" value="0" name="weight" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label >Payload Capacity (kg)</label>
+                            <input  type="number" placeholder="0" value="0" name="payloadCapacity" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label >Additional Equipment</label>
+                            <input type="text" name="additionalEquipment" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label >Number of doors</label>
+                            <input  type="number" placeholder="0" value="0" name="doors" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label >Color</label>
+                            <input type="text" name="color" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label >Trunk capacity (L)</label>
+                            <input  type="number" placeholder="0" value="0" name="trunkCapacity" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -219,11 +221,11 @@
                             <input type="text" name="engine" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label>Fuel tank (l)</label>
+                            <label>Fuel tank (L)</label>
                             <input  type="number" placeholder="0" value="0" name="fuelTank" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label >Fuel Consumption (l/100km)</label>
+                            <label >Fuel Consumption (L/100km)</label>
                             <input  type="number" placeholder="0" value="0" name="fuelConsumption" class="form-control">
                         </div>
                     </div>
