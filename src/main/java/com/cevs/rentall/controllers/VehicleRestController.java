@@ -1,5 +1,6 @@
 package com.cevs.rentall.controllers;
 
+import com.cevs.rentall.dto.BusDto;
 import com.cevs.rentall.dto.CarDto;
 import com.cevs.rentall.dto.TruckDto;
 import com.cevs.rentall.models.User;
@@ -43,6 +44,16 @@ public class VehicleRestController {
     public String addNewTruck(@Valid TruckDto truckDto, BindingResult br){
         if(!br.hasErrors()){
             if(vehicleService.addNewTruck(truckDto)){
+                return Boolean.TRUE.toString();
+            }
+        }
+        return Boolean.FALSE.toString();
+    }
+
+    @PostMapping(path="/bus/new")
+    public String addNewBus(@Valid BusDto busDto, BindingResult br){
+        if(!br.hasErrors()){
+            if(vehicleService.addNewBus(busDto)){
                 return Boolean.TRUE.toString();
             }
         }

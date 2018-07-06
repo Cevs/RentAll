@@ -1,12 +1,10 @@
 package com.cevs.rentall.services;
 
 import com.cevs.rentall.dao.VehicleDao;
+import com.cevs.rentall.dto.BusDto;
 import com.cevs.rentall.dto.CarDto;
 import com.cevs.rentall.dto.TruckDto;
-import com.cevs.rentall.models.Car;
-import com.cevs.rentall.models.Truck;
-import com.cevs.rentall.models.User;
-import com.cevs.rentall.models.Vehicle;
+import com.cevs.rentall.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,6 +45,20 @@ public class VehicleService implements  IVehicleService{
             e.printStackTrace();
         }
         return  false;
+    }
+
+    @Override
+    public boolean addNewBus(BusDto busDto) {
+        try{
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            User renter = (User) auth.getPrincipal();
+            Bus bus = new Bus(busDto, renter.getId());
+            vehicleDao.insertBus(bus);
+            return true;
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override

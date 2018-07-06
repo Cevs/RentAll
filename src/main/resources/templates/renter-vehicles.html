@@ -298,6 +298,113 @@
         </div>
     </div>
 </form>
+
+<!-- Modal add new Bus -->
+<form id="formAddNewBus" th:object="${truckDto}" enctype="utf8">
+    <div class="modal fade" id="modalInsertBus" tabindex="-1" role="dialog"
+         aria-labelledby="modalInsertTruckInsertCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalInsertBusInsertLongTitle"><strong>New Bus</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body row">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label >Type of Truck</label>
+                            <select class="custom-select" name="vehicleSubtype">
+                                <option value="Band Bus">Band Bus</option>
+                                <option value="Minibus">Minibus</option>
+                                <option value="Party Bus">Party Bus</option>
+                                <option value="School Bus">School Bus</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label >Available</label>
+                            <select class="custom-select"  name="available">
+                                <option value="true">Yes</option>
+                                <option value="false">No</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label >Manufacturer</label>
+                            <input type="text" name="manufacturer" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>year (yyyy)</label>
+                            <input  type="number" name="year" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Engine</label>
+                            <input type="text" name="engine" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Fuel tank (L)</label>
+                            <input  type="number" placeholder="0" value="0" name="fuelTank" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label >Fuel Consumption (L/100km)</label>
+                            <input  type="number" placeholder="0" value="0" name="fuelConsumption" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label >Registration Plate</label>
+                            <input  type="text" name="registrationPlate" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label >mileage (km)</label>
+                            <input type="number" placeholder="0" value="0" name="mileage" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label >Spare Tires</label>
+                            <input  type="number" placeholder="0" value="0" name="spareTires" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label >Weight (kg)</label>
+                            <input type="number" placeholder="0" value="0" name="weight" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label >Payload Capacity (kg)</label>
+                            <input  type="number" placeholder="0" value="0" name="payloadCapacity" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label >Additional Equipment</label>
+                            <input type="text" name="additionalEquipment" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label >Two Story</label>
+                            <select class="custom-select"  name="twoStory">
+                                <option value="true">Yes</option>
+                                <option value="false">No</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label >Seats</label>
+                            <input type="number" placeholder="0" value="0" name="seats" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Bunker capacity (L)</label>
+                            <input type="number" placeholder="0" value="0" name="bunkerCapacity" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button  type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="/js/vehicleDatatable.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"

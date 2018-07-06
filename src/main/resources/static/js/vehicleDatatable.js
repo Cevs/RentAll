@@ -31,7 +31,36 @@ $(document).ready(function () {
             $("#trailerInfo").addClass("d-none");
         }
     });
+
+    $("#addNewBus").on("click",function(){
+        $("#modalInsertBus").modal("show");
+    });
+
+    $("#formAddNewBus").on("submit", function(){
+       event.preventDefault();
+       insertNewBus();
+    });
 });
+
+
+function insertNewBus(){
+    endPoint = window.location + "/bus/new";
+    formData = $("#formAddNewBus").serialize();
+    $.post(endPoint, formData, function (data) {
+        if(data=="true"){
+            $("#insertError").hide();
+            $("#insertSuccess").show();
+            getAllRenterVehicles();
+        }else{
+            $("#insertError").show();
+            $("#insertSuccess").hide();
+        }
+
+    });
+    $('#modalInsertBus').modal('hide');
+    $(".modal-body input").val("")
+}
+
 
 function insertNewCar(){
     endPoint = window.location + "/car/new";

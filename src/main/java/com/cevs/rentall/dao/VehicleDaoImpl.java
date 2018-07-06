@@ -1,6 +1,7 @@
 package com.cevs.rentall.dao;
 
 import com.cevs.rentall.database.Database;
+import com.cevs.rentall.models.Bus;
 import com.cevs.rentall.models.Car;
 import com.cevs.rentall.models.Truck;
 import com.cevs.rentall.models.Vehicle;
@@ -104,6 +105,38 @@ public class VehicleDaoImpl implements VehicleDao {
             ps.setFloat(19, truck.getTrailerWidth());
             ps.setFloat(20, truck.getTrailerHeight());
             ps.setInt(21, truck.getFreightSpace());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Insert failed");
+        }
+    }
+
+    @Override
+    public void insertBus(Bus bus) throws SQLException {
+        String sql = "INSERT INTO buses (manufacturer, year, fuel_tank, mileage, engine, fuel_consumption, " +
+                "spare_tires, weight, payload_capacity, additional_equipment, registration_plate, " +
+                "vehicle_type, vehicle_subtype, available, renter_id, seats, two_story, bunker_capacity) " +
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        try(Connection conn = db.openConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);){
+            ps.setString(1,bus.getManufacturer());
+            ps.setInt(2,bus.getYear());
+            ps.setInt(3,bus.getFuelTank());
+            ps.setInt(4,bus.getMileage());
+            ps.setString(5,bus.getEngine());
+            ps.setInt(6,bus.getFuelConsumption());
+            ps.setInt(7,bus.getSpareTires());
+            ps.setInt(8, bus.getWeight());
+            ps.setInt(9,bus.getPayloadCapacitiy());
+            ps.setString(10,bus.getAdditionalEquipment());
+            ps.setString(11,bus.getRegistrationPlate());
+            ps.setObject(12,bus.getVehicleType(), Types.OTHER);
+            ps.setObject(13,bus.getVehicleSubtype(), Types.OTHER);
+            ps.setBoolean(14,bus.isAvailable());
+            ps.setInt(15,bus.getRenterId());
+            ps.setInt(16,bus.getSeats());
+            ps.setBoolean(17, bus.isTwoStroy());
+            ps.setInt(18, bus.getBunkerCapacity());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException("Insert failed");
