@@ -8,7 +8,7 @@ public class Car extends Vehicle {
     private int trunkCapacity;
 
     public Car(CarDto carDto, int renterId){
-        super(carDto.getManufacturer(), carDto.getYear(), carDto.getFuelTank(), carDto.getMilleage(), carDto.getEngine(),
+        super(carDto.getManufacturer(), carDto.getYear(), carDto.getFuelTank(), carDto.getMileage(), carDto.getEngine(),
                 carDto.getFuelConsumption(), carDto.getSpareTires(), carDto.getWeight(), carDto.getPayloadCapacity(),
                 carDto.getAdditionalEquipment(), carDto.getRegistrationPlate(), "Car", carDto.getVehicleSubtype(),
                 carDto.isAvailable(), renterId);

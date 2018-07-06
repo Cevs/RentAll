@@ -12,7 +12,7 @@ public class VehicleDto {
     @NotNull
     private int fuelTank;
     @NotNull
-    private int milleage;
+    private int mileage;
     @NotNull
     @NotEmpty(message = "must not be empty")
     private String engine;
@@ -60,12 +60,12 @@ public class VehicleDto {
         this.fuelTank = fuelTank;
     }
 
-    public int getMilleage() {
-        return milleage;
+    public int getMileage() {
+        return mileage;
     }
 
-    public void setMilleage(int milleage) {
-        this.milleage = milleage;
+    public void setMileage(int mileage) {
+        this.mileage = mileage;
     }
 
     public String getEngine() {

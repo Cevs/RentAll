@@ -2,6 +2,7 @@ package com.cevs.rentall.dao;
 
 import com.cevs.rentall.database.Database;
 import com.cevs.rentall.models.Car;
+import com.cevs.rentall.models.Truck;
 import com.cevs.rentall.models.Vehicle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class VehicleDaoImpl implements VehicleDao {
         List<Vehicle> vehicles = new ArrayList<Vehicle>();
         String sql = "SELECT *FROM vehicles WHERE renter_id = ?";
         try(Connection conn = db.openConnection();
-            PreparedStatement ps = conn.prepareCall(sql)){
+            PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, renterId);
             ResultSet rs  = ps.executeQuery();
             while(rs.next()){
@@ -48,7 +49,7 @@ public class VehicleDaoImpl implements VehicleDao {
                 "vehicle_type, vehicle_subtype, available, renter_id, doors, color, trunk_capacity) " +
                 "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         try(Connection conn=db.openConnection();
-        PreparedStatement ps = conn.prepareCall(sql);){
+        PreparedStatement ps = conn.prepareStatement(sql);){
             ps.setString(1,car.getManufacturer());
             ps.setInt(2,car.getYear());
             ps.setInt(3,car.getFuelTank());
@@ -72,4 +73,42 @@ public class VehicleDaoImpl implements VehicleDao {
             throw new SQLException("Insert failed");
         }
     }
+
+    @Override
+    public void insertTruck(Truck truck) throws SQLException {
+        String sql = "INSERT INTO trucks (manufacturer, year, fuel_tank, mileage, engine, fuel_consumption, " +
+                "spare_tires, weight, payload_capacity, additional_equipment, registration_plate, " +
+                "vehicle_type, vehicle_subtype, available, renter_id, truck_height, trailer, " +
+                "trailer_length, trailer_width, trailer_height, freight_space ) " +
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        try(Connection conn = db.openConnection();
+        PreparedStatement ps = conn.prepareStatement(sql);){
+            ps.setString(1,truck.getManufacturer());
+            ps.setInt(2,truck.getYear());
+            ps.setInt(3,truck.getFuelTank());
+            ps.setInt(4,truck.getMileage());
+            ps.setString(5,truck.getEngine());
+            ps.setInt(6,truck.getFuelConsumption());
+            ps.setInt(7,truck.getSpareTires());
+            ps.setInt(8, truck.getWeight());
+            ps.setInt(9,truck.getPayloadCapacitiy());
+            ps.setString(10,truck.getAdditionalEquipment());
+            ps.setString(11,truck.getRegistrationPlate());
+            ps.setObject(12,truck.getVehicleType(), Types.OTHER);
+            ps.setObject(13,truck.getVehicleSubtype(), Types.OTHER);
+            ps.setBoolean(14,truck.isAvailable());
+            ps.setInt(15,truck.getRenterId());
+            ps.setFloat(16,truck.getTruckHeight());
+            ps.setBoolean(17, truck.isTrailer());
+            ps.setFloat(18, truck.getTrailerLength());
+            ps.setFloat(19, truck.getTrailerWidth());
+            ps.setFloat(20, truck.getTrailerHeight());
+            ps.setInt(21, truck.getFreightSpace());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Insert failed");
+        }
+    }
+
+
 }

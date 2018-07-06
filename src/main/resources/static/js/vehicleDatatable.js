@@ -13,6 +13,24 @@ $(document).ready(function () {
         event.preventDefault();
         insertNewCar();
     })
+
+    $("#addNewTruck").on("click",function(){
+        $("#modalInsertTruck").modal("show");
+    });
+
+    $("#formAddNewTruck").on("submit",function(){
+        event.preventDefault();
+        insertNewTruck();
+    });
+
+    $("#selectTrailer").change(function () {
+        var v = $( "#selectTrailer option:selected" ).text();
+        if(v==="Yes"){
+            $("#trailerInfo").removeClass("d-none");
+        }else{
+            $("#trailerInfo").addClass("d-none");
+        }
+    });
 });
 
 function insertNewCar(){
@@ -30,6 +48,24 @@ function insertNewCar(){
 
     });
     $('#modalInsertVehicle').modal('hide');
+    $(".modal-body input").val("")
+}
+
+function insertNewTruck(){
+    endPoint = window.location + "/truck/new";
+    formData = $("#formAddNewTruck").serialize();
+    $.post(endPoint, formData, function (data) {
+        if(data=="true"){
+            $("#insertError").hide();
+            $("#insertSuccess").show();
+            getAllRenterVehicles();
+        }else{
+            $("#insertError").show();
+            $("#insertSuccess").hide();
+        }
+
+    });
+    $('#modalInsertTruck').modal('hide');
     $(".modal-body input").val("")
 }
 

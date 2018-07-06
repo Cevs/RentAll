@@ -1,15 +1,11 @@
 package com.cevs.rentall.controllers;
 
-import com.cevs.rentall.dao.UserDao;
-import com.cevs.rentall.dao.VehicleDao;
 import com.cevs.rentall.dto.CarDto;
+import com.cevs.rentall.dto.TruckDto;
 import com.cevs.rentall.models.User;
 import com.cevs.rentall.models.Vehicle;
 import com.cevs.rentall.services.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
@@ -21,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/renter/vehicle")
 public class VehicleRestController {
-    
+
     @Autowired
     VehicleService vehicleService;
 
@@ -41,5 +37,15 @@ public class VehicleRestController {
             }
         }
         return  Boolean.FALSE.toString();
+    }
+
+    @PostMapping(path="/truck/new")
+    public String addNewTruck(@Valid TruckDto truckDto, BindingResult br){
+        if(!br.hasErrors()){
+            if(vehicleService.addNewTruck(truckDto)){
+                return Boolean.TRUE.toString();
+            }
+        }
+        return Boolean.FALSE.toString();
     }
 }
