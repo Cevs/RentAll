@@ -13,7 +13,8 @@ public class Car extends Vehicle {
         super(carDto.getId(), carDto.getManufacturer(), carDto.getYear(), carDto.getFuelTank(), carDto.getMileage(),
                 carDto.getEngine(), carDto.getFuelConsumption(), carDto.getSpareTires(), carDto.getWeight(),
                 carDto.getPayloadCapacity(), carDto.getAdditionalEquipment(), carDto.getRegistrationPlate(),
-                "Car", carDto.getVehicleSubtype(), carDto.isAvailable(), renterId);
+                "Car", carDto.getVehicleSubtype(), carDto.isAvailable(), carDto.getPricePerDay(),
+                renterId);
         this.doors = carDto.getDoors();
         this.color = carDto.getColor();
         this.trunkCapacity = carDto.getTrunkCapacity();

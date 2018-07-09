@@ -13,7 +13,7 @@ public class Bus extends Vehicle {
         super(busDto.getId(), busDto.getManufacturer(),busDto.getYear(), busDto.getFuelTank(), busDto.getMileage(),
                 busDto.getEngine(), busDto.getFuelConsumption(), busDto.getSpareTires(), busDto.getWeight(),
                 busDto.getPayloadCapacity(), busDto.getAdditionalEquipment(), busDto.getRegistrationPlate(),
-                "Bus",busDto.getVehicleSubtype(),busDto.isAvailable(), renterId);
+                "Bus",busDto.getVehicleSubtype(),busDto.isAvailable(), busDto.getPricePerDay(), renterId);
         this.seats = busDto.getSeats();
         this.twoStory = busDto.isTwoStory();
         this.bunkerCapacity = busDto.getBunkerCapacity();

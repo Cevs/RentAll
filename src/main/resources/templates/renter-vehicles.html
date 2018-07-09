@@ -81,6 +81,7 @@
             <th>Type</th>
             <th>Subtype</th>
             <th>Available</th>
+            <th>Price per day</th>
             <th></th>
         </tr>
         </thead>
@@ -94,6 +95,7 @@
             <td th:text="${item.vehicleType}" id="tableType"></td>
             <td th:text="${item.vehicleSubtype}" id="tableSubtype"></td>
             <td th:text="${item.available}" id="tableAvailable"></td>
+            <td th:text="${item.pricePerDay}" id="tablePrice"></td>
             <td><button class="btn btn-danger">Delete</button></td>
         </tr>
         </tbody>
@@ -185,6 +187,11 @@
                     </div>
 
                     <div class="col-lg-4">
+                        <div class="form-group">
+                            <label>Price per day (&euro/day)</label>
+                            <input id="carPricePerDay" type="number" value="0" name="pricePerDay"
+                                   class="form-control">
+                        </div>
                         <div class="form-group">
                             <label>Number of doors</label>
                             <input id="carNuberOfDoors" type="number" value="0" name="doors"
@@ -291,6 +298,11 @@
                     </div>
 
                     <div class="col-lg-4">
+                        <div class="form-group">
+                            <label>Price per day (&euro/day)</label>
+                            <input id="truckPricePerDay" type="number" value="0" name="pricePerDay"
+                                   class="form-control">
+                        </div>
                         <div class="form-group">
                             <label>Truck height (m)</label>
                             <input type="number"  value="0.00" step="0.01" name="truckHeight"
@@ -421,6 +433,11 @@
                     </div>
 
                     <div class="col-lg-4">
+                        <div class="form-group">
+                            <label>Price per day (&euro/day)</label>
+                            <input id="busPricePerDay" type="number" value="0" name="pricePerDay"
+                                   class="form-control">
+                        </div>
                         <div class="form-group">
                             <label>Two Story</label>
                             <select class="custom-select" name="twoStory" id="busTwoStory">

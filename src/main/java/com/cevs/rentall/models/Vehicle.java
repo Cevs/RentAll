@@ -18,6 +18,7 @@ public class Vehicle {
     private String vehicleType;
     private String vehicleSubtype;
     private boolean available;
+    private int pricePerDay;
     private int renterId;
 
     public Vehicle() {
@@ -27,7 +28,7 @@ public class Vehicle {
                    int mileage, String engine, int fuelConsumption, int spareTires,
                    int weight, int payloadCapacity, String additionalEquipment,
                    String registrationPlate, String vehicleType, String vehicleSubtype,
-                   boolean available, int renterId) {
+                   boolean available, int pricePerDay, int renterId) {
         this.id=id;
         this.manufacturer = manufacturer;
         this.year = year;
@@ -43,6 +44,7 @@ public class Vehicle {
         this.vehicleType = vehicleType;
         this.vehicleSubtype = vehicleSubtype;
         this.available = available;
+        this.pricePerDay = pricePerDay;
         this.renterId = renterId;
     }
 
@@ -164,6 +166,14 @@ public class Vehicle {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public int getPricePerDay() {
+        return pricePerDay;
+    }
+
+    public void setPricePerDay(int pricePerDay) {
+        this.pricePerDay = pricePerDay;
     }
 
     public int getRenterId() {

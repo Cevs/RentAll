@@ -5,7 +5,7 @@ $(document).ready(function () {
 
     $("#addNewCar").on("click", function () {
         populateModalCar(null);
-        $("#modalInsertCar").modal("show");
+        $("#modalInsertCar").modal({backdrop: 'static', keyboard: false},"show");
     });
 
     //Insert/Update car
@@ -22,7 +22,7 @@ $(document).ready(function () {
 
     $("#addNewTruck").on("click",function(){
         populateModalTruck(null);
-        $("#modalInsertTruck").modal("show");
+        $("#modalInsertTruck").modal({backdrop: 'static', keyboard: false}, "show");
     });
 
     $("#formAddNewTruck").on("submit",function(){
@@ -37,7 +37,7 @@ $(document).ready(function () {
 
     $("#addNewBus").on("click",function(){
         populateModalBus(null);
-        $("#modalInsertBus").modal("show");
+        $("#modalInsertBus").modal({backdrop: 'static', keyboard: false},"show");
     });
 
     $("#formAddNewBus").on("submit", function(){
@@ -76,7 +76,6 @@ $(document).ready(function () {
 
 function updateTableView(){
     selectedType = $("#btnShowVehicleType").text();
-    console.log("Selected type: "+selectedType);
     if(selectedType == "All"){
         getAllRenterVehicles();
     }else{
@@ -239,6 +238,7 @@ function updateTableData(data) {
         $("<th>").text("Type"),
         $("<th>").text("Subtype"),
         $("<th>").text("Available"),
+        $("<th>").text("Price per day"),
         $("<th>").text("")
     )
         .appendTo("#vehicleTable thead");
@@ -252,6 +252,7 @@ function updateTableData(data) {
             $("<td id='tableType'>").text(item.vehicleType),
             $("<td id='tableSubtype'>").text(item.vehicleSubtype),
             $("<td id='tableAvailable'>").text(item.available),
+            $("<td id='tablePrice'>").text(item.pricePerDay),
             $("<td id='btnDeleteVehicle'>").html("<button class='btn btn-danger'><i class='far fa-trash-alt'></i></button>")
         )
             .appendTo("#vehicleTable");
@@ -307,7 +308,7 @@ function getCarData(id) {
         url: endPoint,
         success: function (data) {
             populateModalCar(data);
-            $('#modalInsertCar').modal("show");
+            $('#modalInsertCar').modal({backdrop: 'static', keyboard: false},"show");
         }
     });
 }
@@ -320,7 +321,7 @@ function getTruckData(id){
         url:endPoint,
         success:function(data){
             populateModalTruck(data);
-            $("#modalInsertTruck").modal("show");
+            $("#modalInsertTruck").modal({backdrop: 'static', keyboard: false},"show");
         }
     });
 }
@@ -333,7 +334,7 @@ function getBusData(id){
         url: endPoint,
         success:function (data) {
             populateModalBus(data);
-            $("#modalInsertBus").modal("show");
+            $("#modalInsertBus").modal({backdrop: 'static', keyboard: false},"show");
         }
     });
 }
@@ -357,6 +358,7 @@ function populateModalCar(data){
         $("#modalInsertCar .modal-body #carWeight").val(data.weight);
         $("#modalInsertCar .modal-body #carPayloadCapacity").val(data.payloadCapacity);
         $("#modalInsertCar .modal-body #carAdditionalEquipment").val(data.additionalEquipment);
+        $("#modalInsertCar .modal-body #carPricePerDay").val(data.pricePerDay);
 
         $("#modalInsertCar .modal-body #carNuberOfDoors").val(data.doors);
         $("#modalInsertCar .modal-body #carColor").val(data.color);
@@ -378,6 +380,7 @@ function populateModalCar(data){
         $("#modalInsertCar .modal-body #carWeight").val(0);
         $("#modalInsertCar .modal-body #carPayloadCapacity").val(0);
         $("#modalInsertCar .modal-body #carAdditionalEquipment").val("");
+        $("#modalInsertCar .modal-body #carPricePerDay").val(0);
 
         $("#modalInsertCar .modal-body #carNuberOfDoors").val(0);
         $("#modalInsertCar .modal-body #carColor").val("");
@@ -404,6 +407,7 @@ function populateModalTruck(data){
         $("#modalInsertTruck .modal-body #truckWeight").val(data.weight);
         $("#modalInsertTruck .modal-body #truckPayloadCapacity").val(data.payloadCapacity);
         $("#modalInsertTruck .modal-body #truckAdditionalEquipment").val(data.additionalEquipment);
+        $("#modalInsertTruck .modal-body #truckPricePerDay").val(data.pricePerDay);
 
         $("#modalInsertTruck .modal-body #truckHeight").val(data.truckHeight);
         $("#modalInsertTruck .modal-body #selectTrailer").val(data.trailer+"");
@@ -434,6 +438,7 @@ function populateModalTruck(data){
         $("#modalInsertTruck .modal-body #truckPayloadCapacity").val(0);
         $("#modalInsertTruck .modal-body #truckAdditionalEquipment").val("");
         $("#modalInsertTruck .modal-body #trailerInfo").addClass("d-none");
+        $("#modalInsertTruck .modal-body #truckPricePerDay").val(0);
 
         $("#modalInsertTruck .modal-body #truckHeight").val(0.00);
         $("#modalInsertTruck .modal-body #selectTrailer").val("false");
@@ -464,6 +469,7 @@ function populateModalBus(data){
         $("#modalInsertBus .modal-body #busWeight").val(data.weight);
         $("#modalInsertBus .modal-body #busPayloadCapacity").val(data.payloadCapacity);
         $("#modalInsertBus .modal-body #busAdditionalEquipment").val(data.additionalEquipment);
+        $("#modalInsertBus .modal-body #busPricePerDay").val(data.pricePerDay);
 
         $("#modalInsertBus .modal-body #busSeats").val(data.seats);
         $("#modalInsertBus .modal-body #busTwoStory").val(data.twoStory+"");
@@ -485,6 +491,7 @@ function populateModalBus(data){
         $("#modalInsertBus .modal-body #busWeight").val(0);
         $("#modalInsertBus .modal-body #busPayloadCapacity").val(0);
         $("#modalInsertBus .modal-body #busAdditionalEquipment").val("");
+        $("#modalInsertBus .modal-body #busPricePerDay").val(0);
 
         $("#modalInsertBus .modal-body #busSeats").val(0);
         $("#modalInsertBus .modal-body #busTwoStory").val("false");

@@ -17,7 +17,7 @@ public class Truck extends Vehicle {
                 truckDto.getMileage(),truckDto.getEngine(), truckDto.getFuelConsumption(), truckDto.getSpareTires(),
                 truckDto.getWeight(), truckDto.getPayloadCapacity(), truckDto.getAdditionalEquipment(),
                 truckDto.getRegistrationPlate(), "Truck", truckDto.getVehicleSubtype(),
-                truckDto.isAvailable(), renterId);
+                truckDto.isAvailable(), truckDto.getPricePerDay(), renterId);
         this.truckHeight = truckDto.getTruckHeight();
         this.trailer = truckDto.isTrailer();
         this.trailerLength = truckDto.getTrailerLength();

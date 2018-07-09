@@ -37,6 +37,8 @@ public class VehicleDto {
     private String vehicleSubtype;
     @NotNull
     private boolean available;
+    @NotNull
+    private int pricePerDay;
 
     public String getManufacturer() {
         return manufacturer;
@@ -148,5 +150,13 @@ public class VehicleDto {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public int getPricePerDay() {
+        return pricePerDay;
+    }
+
+    public void setPricePerDay(int pricePerDay) {
+        this.pricePerDay = pricePerDay;
     }
 }

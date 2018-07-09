@@ -35,6 +35,7 @@ public class VehicleDaoImpl implements VehicleDao {
                 v.setVehicleType(rs.getString("vehicle_type"));
                 v.setVehicleSubtype(rs.getString("vehicle_subtype"));
                 v.setAvailable(rs.getBoolean("available"));
+                v.setPricePerDay(rs.getInt("price_per_day"));
 
                 vehicles.add(v);
             }
@@ -62,6 +63,7 @@ public class VehicleDaoImpl implements VehicleDao {
                 v.setVehicleType(rs.getString("vehicle_type"));
                 v.setVehicleSubtype(rs.getString("vehicle_subtype"));
                 v.setAvailable(rs.getBoolean("available"));
+                v.setPricePerDay(rs.getInt("price_per_day"));
                 vehicles.add(v);
             }
         } catch (SQLException e) {
@@ -96,6 +98,8 @@ public class VehicleDaoImpl implements VehicleDao {
                 car.setVehicleSubtype(rs.getString("vehicle_subtype"));
                 car.setAvailable(rs.getBoolean("available"));
                 car.setRenterId(rs.getInt("renter_id"));
+                car.setPricePerDay(rs.getInt("price_per_day"));
+
                 car.setDoors(rs.getInt("doors"));
                 car.setColor(rs.getString("color"));
                 car.setTrunkCapacity(rs.getInt("trunk_capacity"));
@@ -132,6 +136,8 @@ public class VehicleDaoImpl implements VehicleDao {
                 truck.setVehicleSubtype(rs.getString("vehicle_subtype"));
                 truck.setAvailable(rs.getBoolean("available"));
                 truck.setRenterId(rs.getInt("renter_id"));
+                truck.setPricePerDay(rs.getInt("price_per_day"));
+
                 truck.setTruckHeight(rs.getFloat("truck_height"));
                 truck.setTrailer(rs.getBoolean("trailer"));
                 truck.setTrailerLength(rs.getFloat("trailer_length"));
@@ -171,6 +177,7 @@ public class VehicleDaoImpl implements VehicleDao {
                 bus.setVehicleSubtype(rs.getString("vehicle_subtype"));
                 bus.setAvailable(rs.getBoolean("available"));
                 bus.setRenterId(rs.getInt("renter_id"));
+                bus.setPricePerDay(rs.getInt("price_per_day"));
 
                 bus.setSeats(rs.getInt("seats"));
                 bus.setTwoStory(rs.getBoolean("two_story"));
@@ -186,8 +193,8 @@ public class VehicleDaoImpl implements VehicleDao {
     public void insertCar(Car car) throws SQLException {
         String sql = "INSERT INTO cars (manufacturer, year, fuel_tank, mileage, engine, fuel_consumption, " +
                 "spare_tires, weight, payload_capacity, additional_equipment, registration_plate, " +
-                "vehicle_type, vehicle_subtype, available, renter_id, doors, color, trunk_capacity) " +
-                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+                "vehicle_type, vehicle_subtype, available, price_per_day, renter_id, doors, color, trunk_capacity) " +
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         try(Connection conn=db.openConnection();
         PreparedStatement ps = conn.prepareStatement(sql);){
             ps.setString(1,car.getManufacturer());
@@ -204,10 +211,11 @@ public class VehicleDaoImpl implements VehicleDao {
             ps.setObject(12,car.getVehicleType(), Types.OTHER);
             ps.setObject(13,car.getVehicleSubtype(), Types.OTHER);
             ps.setBoolean(14,car.isAvailable());
-            ps.setInt(15,car.getRenterId());
-            ps.setInt(16,car.getDoors());
-            ps.setString(17,car.getColor());
-            ps.setInt(18,car.getTrunkCapacity());
+            ps.setInt(15,car.getPricePerDay());
+            ps.setInt(16,car.getRenterId());
+            ps.setInt(17,car.getDoors());
+            ps.setString(18,car.getColor());
+            ps.setInt(19, car.getTrunkCapacity());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException("Insert failed");
@@ -215,12 +223,47 @@ public class VehicleDaoImpl implements VehicleDao {
     }
 
     @Override
+    public void updateCar(Car car) throws SQLException {
+        String sql = "UPDATE cars SET manufacturer = ?, year = ?, fuel_tank = ?, mileage = ?, engine = ?, " +
+                "fuel_consumption = ?, spare_tires = ?, weight = ?, payload_capacity = ?, additional_equipment = ?, " +
+                "registration_plate = ?, vehicle_subtype = ?, available = ?, price_per_day = ?, doors = ?, " +
+                "color = ?, trunk_capacity = ? " +
+                "WHERE id = ? AND renter_id = ?;";
+        try(Connection conn=db.openConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setString(1,car.getManufacturer());
+            ps.setInt(2,car.getYear());
+            ps.setInt(3,car.getFuelTank());
+            ps.setInt(4,car.getMileage());
+            ps.setString(5,car.getEngine());
+            ps.setInt(6,car.getFuelConsumption());
+            ps.setInt(7,car.getSpareTires());
+            ps.setInt(8,car.getWeight());
+            ps.setInt(9,car.getPayloadCapacity());
+            ps.setString(10,car.getAdditionalEquipment());
+            ps.setString(11,car.getRegistrationPlate());
+            ps.setObject(12,car.getVehicleSubtype(), Types.OTHER);
+            ps.setBoolean(13,car.isAvailable());
+            ps.setInt(14,car.getPricePerDay());
+
+            ps.setInt(15,car.getDoors());
+            ps.setString(16,car.getColor());
+            ps.setInt(17, car.getTrunkCapacity());
+            ps.setInt(18,car.getId());
+            ps.setInt(19,car.getRenterId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Update failed");
+        }
+    }
+
+    @Override
     public void insertTruck(Truck truck) throws SQLException {
         String sql = "INSERT INTO trucks (manufacturer, year, fuel_tank, mileage, engine, fuel_consumption, " +
                 "spare_tires, weight, payload_capacity, additional_equipment, registration_plate, " +
-                "vehicle_type, vehicle_subtype, available, renter_id, truck_height, trailer, " +
+                "vehicle_type, vehicle_subtype, available, price_per_day, renter_id, truck_height, trailer, " +
                 "trailer_length, trailer_width, trailer_height, freight_space ) " +
-                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         try(Connection conn = db.openConnection();
         PreparedStatement ps = conn.prepareStatement(sql);){
             ps.setString(1,truck.getManufacturer());
@@ -237,13 +280,14 @@ public class VehicleDaoImpl implements VehicleDao {
             ps.setObject(12,truck.getVehicleType(), Types.OTHER);
             ps.setObject(13,truck.getVehicleSubtype(), Types.OTHER);
             ps.setBoolean(14,truck.isAvailable());
-            ps.setInt(15,truck.getRenterId());
-            ps.setFloat(16,truck.getTruckHeight());
-            ps.setBoolean(17, truck.isTrailer());
-            ps.setFloat(18, truck.getTrailerLength());
-            ps.setFloat(19, truck.getTrailerWidth());
-            ps.setFloat(20, truck.getTrailerHeight());
-            ps.setInt(21, truck.getFreightSpace());
+            ps.setInt(15,truck.getPricePerDay());
+            ps.setInt(16,truck.getRenterId());
+            ps.setFloat(17,truck.getTruckHeight());
+            ps.setBoolean(18, truck.isTrailer());
+            ps.setFloat(19, truck.getTrailerLength());
+            ps.setFloat(20, truck.getTrailerWidth());
+            ps.setFloat(21, truck.getTrailerHeight());
+            ps.setInt(22, truck.getFreightSpace());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException("Insert failed");
@@ -254,8 +298,8 @@ public class VehicleDaoImpl implements VehicleDao {
     public void updateTruck(Truck truck) throws SQLException {
         String sql = "UPDATE trucks SET manufacturer = ?, year = ?, fuel_tank = ?, mileage = ?, engine = ?, " +
                 "fuel_consumption = ?, spare_tires = ?, weight = ?, payload_capacity = ?, additional_equipment = ?, " +
-                "registration_plate = ?, vehicle_subtype = ?, available = ?, truck_height = ?, trailer = ?, " +
-                "trailer_length = ?, trailer_width = ?, trailer_height = ?, freight_space = ? " +
+                "registration_plate = ?, vehicle_subtype = ?, available = ?, price_per_day = ? ,truck_height = ?, " +
+                "trailer = ?, trailer_length = ?, trailer_width = ?, trailer_height = ?, freight_space = ? " +
                 "WHERE id = ? AND renter_id = ?";
         try(Connection conn = db.openConnection();
         PreparedStatement ps = conn.prepareStatement(sql)){
@@ -272,16 +316,17 @@ public class VehicleDaoImpl implements VehicleDao {
             ps.setString(11,truck.getRegistrationPlate());
             ps.setObject(12,truck.getVehicleSubtype(), Types.OTHER);
             ps.setBoolean(13,truck.isAvailable());
+            ps.setInt(14,truck.getPricePerDay());
 
-            ps.setFloat(14, truck.getTruckHeight());
-            ps.setBoolean(15,truck.isTrailer());
-            ps.setFloat(16,truck.getTrailerLength());
-            ps.setFloat(17,truck.getTrailerWidth());
-            ps.setFloat(18,truck.getTrailerHeight());
-            ps.setInt(19,truck.getFreightSpace());
+            ps.setFloat(15, truck.getTruckHeight());
+            ps.setBoolean(16,truck.isTrailer());
+            ps.setFloat(17,truck.getTrailerLength());
+            ps.setFloat(18,truck.getTrailerWidth());
+            ps.setFloat(19,truck.getTrailerHeight());
+            ps.setInt(20,truck.getFreightSpace());
 
-            ps.setInt(20,truck.getId());
-            ps.setInt(21,truck.getRenterId());
+            ps.setInt(21,truck.getId());
+            ps.setInt(22,truck.getRenterId());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException("Update failed");
@@ -292,8 +337,9 @@ public class VehicleDaoImpl implements VehicleDao {
     public void insertBus(Bus bus) throws SQLException {
         String sql = "INSERT INTO buses (manufacturer, year, fuel_tank, mileage, engine, fuel_consumption, " +
                 "spare_tires, weight, payload_capacity, additional_equipment, registration_plate, " +
-                "vehicle_type, vehicle_subtype, available, renter_id, seats, two_story, bunker_capacity) " +
-                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+                "vehicle_type, vehicle_subtype, available, price_per_day, renter_id, seats, two_story, " +
+                "bunker_capacity) " +
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         try(Connection conn = db.openConnection();
             PreparedStatement ps = conn.prepareStatement(sql);){
             ps.setString(1,bus.getManufacturer());
@@ -310,10 +356,11 @@ public class VehicleDaoImpl implements VehicleDao {
             ps.setObject(12,bus.getVehicleType(), Types.OTHER);
             ps.setObject(13,bus.getVehicleSubtype(), Types.OTHER);
             ps.setBoolean(14,bus.isAvailable());
-            ps.setInt(15,bus.getRenterId());
-            ps.setInt(16,bus.getSeats());
-            ps.setBoolean(17, bus.isTwoStory());
-            ps.setInt(18, bus.getBunkerCapacity());
+            ps.setInt(15, bus.getPricePerDay());
+            ps.setInt(16,bus.getRenterId());
+            ps.setInt(17,bus.getSeats());
+            ps.setBoolean(18, bus.isTwoStory());
+            ps.setInt(19, bus.getBunkerCapacity());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException("Insert failed");
@@ -324,8 +371,8 @@ public class VehicleDaoImpl implements VehicleDao {
     public void updateBus(Bus bus) throws SQLException {
         String sql = "UPDATE buses SET manufacturer = ?, year = ?, fuel_tank = ?, mileage = ?, engine = ?, " +
                 "fuel_consumption = ?, spare_tires = ?, weight = ?, payload_capacity = ?, additional_equipment = ?, " +
-                "registration_plate = ?, vehicle_subtype = ?, available = ?, seats = ?, two_story = ?, " +
-                "bunker_capacity = ? " +
+                "registration_plate = ?, vehicle_subtype = ?, available = ?, price_per_day = ? seats = ?, " +
+                "two_story = ?, bunker_capacity = ? " +
                 "WHERE id = ? AND renter_id = ?;";
         try(Connection conn = db.openConnection();
         PreparedStatement ps = conn.prepareStatement(sql)){
@@ -342,13 +389,14 @@ public class VehicleDaoImpl implements VehicleDao {
             ps.setString(11,bus.getRegistrationPlate());
             ps.setObject(12,bus.getVehicleSubtype(), Types.OTHER);
             ps.setBoolean(13,bus.isAvailable());
+            ps.setInt(14,bus.getPricePerDay());
 
-            ps.setInt(14, bus.getSeats());
-            ps.setBoolean(15,bus.isTwoStory());
-            ps.setInt(16,bus.getBunkerCapacity());
+            ps.setInt(15, bus.getSeats());
+            ps.setBoolean(16,bus.isTwoStory());
+            ps.setInt(17,bus.getBunkerCapacity());
 
-            ps.setInt(17, bus.getId());
-            ps.setInt(18, bus.getRenterId());
+            ps.setInt(18, bus.getId());
+            ps.setInt(19, bus.getRenterId());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException("Update failed");
@@ -367,38 +415,4 @@ public class VehicleDaoImpl implements VehicleDao {
             throw new SQLException("Delete failed");
         }
     }
-
-    @Override
-    public void updateCar(Car car) throws SQLException {
-        String sql = "UPDATE cars SET manufacturer = ?, year = ?, fuel_tank = ?, mileage = ?, engine = ?, " +
-                "fuel_consumption = ?, spare_tires = ?, weight = ?, payload_capacity = ?, additional_equipment = ?, " +
-                "registration_plate = ?, vehicle_subtype = ?, available = ?, doors = ?, color = ?, trunk_capacity = ? " +
-                "WHERE id = ? AND renter_id = ?;";
-        try(Connection conn=db.openConnection();
-        PreparedStatement ps = conn.prepareStatement(sql)){
-            ps.setString(1,car.getManufacturer());
-            ps.setInt(2,car.getYear());
-            ps.setInt(3,car.getFuelTank());
-            ps.setInt(4,car.getMileage());
-            ps.setString(5,car.getEngine());
-            ps.setInt(6,car.getFuelConsumption());
-            ps.setInt(7,car.getSpareTires());
-            ps.setInt(8,car.getWeight());
-            ps.setInt(9,car.getPayloadCapacity());
-            ps.setString(10,car.getAdditionalEquipment());
-            ps.setString(11,car.getRegistrationPlate());
-            ps.setObject(12,car.getVehicleSubtype(), Types.OTHER);
-            ps.setBoolean(13,car.isAvailable());
-            ps.setInt(14,car.getDoors());
-            ps.setString(15,car.getColor());
-            ps.setInt(16, car.getTrunkCapacity());
-            ps.setInt(17,car.getId());
-            ps.setInt(18,car.getRenterId());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new SQLException("Update failed");
-        }
-    }
-
-
 }
