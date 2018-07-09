@@ -12,7 +12,7 @@ public class Vehicle {
     private int fuelConsumption;
     private int spareTires;
     private int weight;
-    private int payloadCapacitiy;
+    private int payloadCapacity;
     private String additionalEquipment;
     private String registrationPlate;
     private String vehicleType;
@@ -23,11 +23,12 @@ public class Vehicle {
     public Vehicle() {
     }
 
-    public Vehicle(String manufacturer, int year, int fuelTank,
+    public Vehicle(int id, String manufacturer, int year, int fuelTank,
                    int mileage, String engine, int fuelConsumption, int spareTires,
-                   int weight, int payloadCapacitiy, String additionalEquipment,
+                   int weight, int payloadCapacity, String additionalEquipment,
                    String registrationPlate, String vehicleType, String vehicleSubtype,
                    boolean available, int renterId) {
+        this.id=id;
         this.manufacturer = manufacturer;
         this.year = year;
         this.fuelTank = fuelTank;
@@ -36,7 +37,7 @@ public class Vehicle {
         this.fuelConsumption = fuelConsumption;
         this.spareTires = spareTires;
         this.weight = weight;
-        this.payloadCapacitiy = payloadCapacitiy;
+        this.payloadCapacity = payloadCapacity;
         this.additionalEquipment = additionalEquipment;
         this.registrationPlate = registrationPlate;
         this.vehicleType = vehicleType;
@@ -117,12 +118,12 @@ public class Vehicle {
         this.weight = weight;
     }
 
-    public int getPayloadCapacitiy() {
-        return payloadCapacitiy;
+    public int getPayloadCapacity() {
+        return payloadCapacity;
     }
 
-    public void setPayloadCapacitiy(int payloadCapacitiy) {
-        this.payloadCapacitiy = payloadCapacitiy;
+    public void setPayloadCapacity(int payloadCapacitiy) {
+        this.payloadCapacity = payloadCapacitiy;
     }
 
     public String getAdditionalEquipment() {

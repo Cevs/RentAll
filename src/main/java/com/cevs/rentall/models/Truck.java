@@ -10,9 +10,11 @@ public class Truck extends Vehicle {
     private float trailerHeight;
     private int freightSpace;
 
+    public Truck(){}
+
     public Truck(TruckDto truckDto, int renterId) {
-        super(truckDto.getManufacturer(), truckDto.getYear(), truckDto.getFuelTank(), truckDto.getMileage(),
-                truckDto.getEngine(), truckDto.getFuelConsumption(), truckDto.getSpareTires(),
+        super(truckDto.getId(), truckDto.getManufacturer(), truckDto.getYear(), truckDto.getFuelTank(),
+                truckDto.getMileage(),truckDto.getEngine(), truckDto.getFuelConsumption(), truckDto.getSpareTires(),
                 truckDto.getWeight(), truckDto.getPayloadCapacity(), truckDto.getAdditionalEquipment(),
                 truckDto.getRegistrationPlate(), "Truck", truckDto.getVehicleSubtype(),
                 truckDto.isAvailable(), renterId);

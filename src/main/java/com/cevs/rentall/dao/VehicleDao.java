@@ -11,7 +11,15 @@ import java.util.List;
 
 public interface VehicleDao {
     List<Vehicle> getRenterVehicles(int renterId);
+    List<Vehicle> getRenterVehiclesOfType(int renterId, String vehicleType);
+    Car getCarById(int renterId, int carId);
+    Truck getTruckById(int renterId, int truckId);
+    Bus getBusById(int renterId, int busId);
     void insertCar(Car car) throws SQLException;
+    void updateCar(Car car) throws SQLException;
     void insertTruck(Truck truck) throws SQLException;
+    void updateTruck(Truck truck) throws SQLException;
     void insertBus(Bus bus) throws SQLException;
+    void updateBus(Bus bus) throws SQLException;
+    void deleteVehicle(int renterId, int vehicleId) throws SQLException;
 }

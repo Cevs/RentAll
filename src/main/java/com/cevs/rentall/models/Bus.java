@@ -4,16 +4,18 @@ import com.cevs.rentall.dto.BusDto;
 
 public class Bus extends Vehicle {
     private int seats;
-    private boolean twoStroy;
+    private boolean twoStory;
     private int bunkerCapacity;
 
+    public Bus(){}
+
     public Bus(BusDto busDto, int renterId) {
-        super(busDto.getManufacturer(),busDto.getYear(), busDto.getFuelTank(), busDto.getMileage(),
+        super(busDto.getId(), busDto.getManufacturer(),busDto.getYear(), busDto.getFuelTank(), busDto.getMileage(),
                 busDto.getEngine(), busDto.getFuelConsumption(), busDto.getSpareTires(), busDto.getWeight(),
                 busDto.getPayloadCapacity(), busDto.getAdditionalEquipment(), busDto.getRegistrationPlate(),
                 "Bus",busDto.getVehicleSubtype(),busDto.isAvailable(), renterId);
         this.seats = busDto.getSeats();
-        this.twoStroy = busDto.isTwoStory();
+        this.twoStory = busDto.isTwoStory();
         this.bunkerCapacity = busDto.getBunkerCapacity();
     }
 
@@ -25,12 +27,12 @@ public class Bus extends Vehicle {
         this.seats = seats;
     }
 
-    public boolean isTwoStroy() {
-        return twoStroy;
+    public boolean isTwoStory() {
+        return twoStory;
     }
 
-    public void setTwoStroy(boolean twoStroy) {
-        this.twoStroy = twoStroy;
+    public void setTwoStory(boolean twoStory) {
+        this.twoStory = twoStory;
     }
 
     public int getBunkerCapacity() {

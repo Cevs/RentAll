@@ -5,6 +5,8 @@ import javax.validation.constraints.NotNull;
 
 public class VehicleDto {
     @NotNull
+    private int id;
+    @NotNull
     @NotEmpty(message = "must not be empty")
     private String manufacturer;
     @NotNull
@@ -62,6 +64,14 @@ public class VehicleDto {
 
     public int getMileage() {
         return mileage;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setMileage(int mileage) {

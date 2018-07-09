@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="/css/main.css"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
           integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -34,20 +35,36 @@
 </nav>
 <div class="container">
     <h1 class="text-center mb-5 mt-5">Vehicles</h1>
-    <div class="dropdown">
-        <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-            New Vehicle
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" id="addNewCar">Car</a>
-            <a class="dropdown-item" id="addNewTruck">Truck</a>
-            <a class="dropdown-item" id="addNewBus">Bus</a>
+    <div>
+        <div class="dropdown" style="float:left; margin-right: 10px;">
+            <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                New Vehicle
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" id="addNewCar">Car</a>
+                <a class="dropdown-item" id="addNewTruck">Truck</a>
+                <a class="dropdown-item" id="addNewBus">Bus</a>
+            </div>
         </div>
-        <div id="insertSuccess"  class="alert alert-success login-message mt-3">
+        <div id="vehicleTypeMenu" class="btn-group dropright" style="float:left;">
+            <button id="btnShowVehicleType" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">All</button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" id="showAll">All</a>
+                <a class="dropdown-item" id="showBuses">Bus</a>
+                <a class="dropdown-item" id="showCars">Car</a>
+                <a class="dropdown-item" id="showTrucks">Truck</a>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div style="clear:both"></div>
+    <div style="margin-top:10px;">
+        <div id="insertSuccess" class="alert alert-success login-message">
             <strong><p class="p-0 m-0 text-center">Insert Successful</p></strong>
         </div>
-        <div id="insertError" class="alert alert-danger login-message mt-3">
+        <div id="insertError" class="alert alert-danger login-message">
             <strong><p class="p-0 m-0 text-center">Insert Failed</p></strong>
         </div>
     </div>
@@ -57,122 +74,137 @@
         <thead>
         <tr>
             <th>#</th>
+            <th>Id</th>
             <th>Manufacture</th>
             <th>Year</th>
             <th>Registration Plate</th>
             <th>Type</th>
             <th>Subtype</th>
             <th>Available</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="item,i : ${vehicles}" class="bg-light">
             <th th:text="${i.count}" scope="row"></th>
+            <th th:text="${item.id}" scope="row" id="tableId"></th>
             <td th:text="${item.manufacturer}" id="tableManufacturer"></td>
             <td th:text="${item.year}" id="tableYear"></td>
             <td th:text="${item.registrationPlate}" id="tableRegistrationPlate"></td>
             <td th:text="${item.vehicleType}" id="tableType"></td>
             <td th:text="${item.vehicleSubtype}" id="tableSubtype"></td>
             <td th:text="${item.available}" id="tableAvailable"></td>
+            <td><button class="btn btn-danger">Delete</button></td>
         </tr>
         </tbody>
     </table>
 </div>
 <!-- Modal add new Car -->
 <form id="formAddNewCar" th:object="${carDto}" enctype="utf8">
-    <div class="modal fade" id="modalInsertVehicle" tabindex="-1" role="dialog"
-         aria-labelledby="modalInsertVehicleInsertCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="modalInsertCar" tabindex="-1" role="dialog"
+         aria-labelledby="modalInsertCarInsertCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalInsertVehicleInsertLongTitle"><strong>New Car</strong></h5>
+                    <h5 class="modal-title" id="modalInsertCarInsertLongTitle"><strong>Car</strong></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body row">
+                    <input type="number" value="-1" readonly id="carId" name="id" class="d-none">
                     <div class="col-lg-4">
                         <div class="form-group">
-                            <label >Type of Car</label>
-                            <select class="custom-select" name="vehicleSubtype">
+                            <label>Type of Car</label>
+                            <select class="custom-select" name="vehicleSubtype" id="carSubtype">
                                 <option value="Caravan">Caravan</option>
                                 <option value="Limousine">Limousine</option>
                                 <option value="Delivery">Delivery</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label >Available</label>
-                            <select class="custom-select"  name="available">
+                            <label>Available</label>
+                            <select class="custom-select" name="available" id="carAvailable">
                                 <option value="true">Yes</option>
                                 <option value="false">No</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label >Manufacturer</label>
-                            <input type="text" name="manufacturer" class="form-control">
+                            <label>Manufacturer</label>
+                            <input type="text" id="carManufacturer" name="manufacturer" class="form-control">
                         </div>
                         <div class="form-group">
                             <label>year (yyyy)</label>
-                            <input  type="number" name="year" class="form-control">
+                            <input id="carYear" type="number" name="year" class="form-control">
                         </div>
                         <div class="form-group">
                             <label>Engine</label>
-                            <input type="text" name="engine" class="form-control">
+                            <input id="carEngine" type="text" name="engine" class="form-control">
                         </div>
                         <div class="form-group">
                             <label>Fuel tank (L)</label>
-                            <input  type="number" placeholder="0" value="0" name="fuelTank" class="form-control">
+                            <input id="carFuelTank" type="number" value="0" name="fuelTank"
+                                   class="form-control">
                         </div>
                         <div class="form-group">
-                            <label >Fuel Consumption (L/100km)</label>
-                            <input  type="number" placeholder="0" value="0" name="fuelConsumption" class="form-control">
+                            <label>Fuel Consumption (L/100km)</label>
+                            <input id="carFuelConsumption" type="number"  value="0"
+                                   name="fuelConsumption" class="form-control">
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="form-group">
-                            <label >Registration Plate</label>
-                            <input  type="text" name="registrationPlate" class="form-control">
+                            <label>Registration Plate</label>
+                            <input id="carRegistrationPlate" type="text" name="registrationPlate" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label >mileage (km)</label>
-                            <input type="number" placeholder="0" value="0" name="mileage" class="form-control">
+                            <label>mileage (km)</label>
+                            <input id="carMileage" type="number"  value="0" name="mileage"
+                                   class="form-control">
                         </div>
                         <div class="form-group">
-                            <label >Spare Tires</label>
-                            <input  type="number" placeholder="0" value="0" name="spareTires" class="form-control">
+                            <label>Spare Tires</label>
+                            <input id="carSpareTires" type="number"  value="0" name="spareTires"
+                                   class="form-control">
                         </div>
                         <div class="form-group">
-                            <label >Weight (kg)</label>
-                            <input type="number" placeholder="0" value="0" name="weight" class="form-control">
+                            <label>Weight (kg)</label>
+                            <input id="carWeight" type="number"  value="0" name="weight"
+                                   class="form-control">
                         </div>
                         <div class="form-group">
-                            <label >Payload Capacity (kg)</label>
-                            <input  type="number" placeholder="0" value="0" name="payloadCapacity" class="form-control">
+                            <label>Payload Capacity (kg)</label>
+                            <input id="carPayloadCapacity" type="number"  value="0"
+                                   name="payloadCapacity" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label >Additional Equipment</label>
-                            <input type="text" name="additionalEquipment" class="form-control">
+                            <label>Additional Equipment</label>
+                            <input id="carAdditionalEquipment" type="text" name="additionalEquipment"
+                                   class="form-control">
                         </div>
                     </div>
 
                     <div class="col-lg-4">
                         <div class="form-group">
-                            <label >Number of doors</label>
-                            <input  type="number" placeholder="0" value="0" name="doors" class="form-control">
+                            <label>Number of doors</label>
+                            <input id="carNuberOfDoors" type="number" value="0" name="doors"
+                                   class="form-control">
                         </div>
                         <div class="form-group">
-                            <label >Color</label>
-                            <input type="text" name="color" class="form-control">
+                            <label>Color</label>
+                            <input id="carColor" type="text" name="color" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label >Trunk capacity (L)</label>
-                            <input  type="number" placeholder="0" value="0" name="trunkCapacity" class="form-control">
+                            <label>Trunk capacity (L)</label>
+                            <input id="carTrunkCapacity" type="number" value="0" name="trunkCapacity"
+                                   class="form-control">
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button  type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" id="btnCarUpdate" class="btn btn-info">Update</button>
+                    <button type="submit" id="btnCarInsert" class="btn btn-primary">Insert</button>
                 </div>
             </div>
         </div>
@@ -186,113 +218,119 @@
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalInsertTruckInsertLongTitle"><strong>New Truck</strong></h5>
+                    <h5 class="modal-title" id="modalInsertTruckInsertLongTitle"><strong>Truck</strong></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body row">
                     <div class="col-lg-4">
+                        <input type="number" value="-1" readonly id="truckId" name="id" class="d-none">
                         <div class="form-group">
-                            <label >Type of Truck</label>
-                            <select class="custom-select" name="vehicleSubtype">
+                            <label>Type of Truck</label>
+                            <select class="custom-select" name="vehicleSubtype" id="truckSubtype">
                                 <option value="Delivery">Delivery</option>
                                 <option value="Freight">Freight</option>
                                 <option value="Pickup">Pickup</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label >Available</label>
-                            <select class="custom-select"  name="available">
+                            <label>Available</label>
+                            <select class="custom-select" name="available" id="truckAvailable">
                                 <option value="true">Yes</option>
                                 <option value="false">No</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label >Manufacturer</label>
-                            <input type="text" name="manufacturer" class="form-control">
+                            <label>Manufacturer</label>
+                            <input type="text" name="manufacturer" class="form-control" id="truckManufacturer">
                         </div>
                         <div class="form-group">
                             <label>year (yyyy)</label>
-                            <input  type="number" name="year" class="form-control">
+                            <input type="number" name="year" class="form-control" id="truckYear">
                         </div>
                         <div class="form-group">
                             <label>Engine</label>
-                            <input type="text" name="engine" class="form-control">
+                            <input type="text" name="engine" class="form-control" id="truckEngine">
                         </div>
                         <div class="form-group">
                             <label>Fuel tank (L)</label>
-                            <input  type="number" placeholder="0" value="0" name="fuelTank" class="form-control">
+                            <input type="number"  value="0" name="fuelTank" class="form-control" id="truckFuelTank">
                         </div>
                         <div class="form-group">
-                            <label >Fuel Consumption (L/100km)</label>
-                            <input  type="number" placeholder="0" value="0" name="fuelConsumption" class="form-control">
+                            <label>Fuel Consumption (L/100km)</label>
+                            <input type="number" value="0" name="fuelConsumption" class="form-control" id="truckFuelConsumption">
                         </div>
                     </div>
 
                     <div class="col-lg-4">
                         <div class="form-group">
-                            <label >Registration Plate</label>
-                            <input  type="text" name="registrationPlate" class="form-control">
+                            <label>Registration Plate</label>
+                            <input type="text" name="registrationPlate" class="form-control" id="truckRegistrationPlate">
                         </div>
                         <div class="form-group">
-                            <label >mileage (km)</label>
-                            <input type="number" placeholder="0" value="0" name="mileage" class="form-control">
+                            <label>mileage (km)</label>
+                            <input type="number" value="0" name="mileage" class="form-control" id="truckMileage">
                         </div>
                         <div class="form-group">
-                            <label >Spare Tires</label>
-                            <input  type="number" placeholder="0" value="0" name="spareTires" class="form-control">
+                            <label>Spare Tires</label>
+                            <input type="number"  value="0" name="spareTires" class="form-control" id="truckSpareTires">
                         </div>
                         <div class="form-group">
-                            <label >Weight (kg)</label>
-                            <input type="number" placeholder="0" value="0" name="weight" class="form-control">
+                            <label>Weight (kg)</label>
+                            <input type="number"  value="0" name="weight" class="form-control" id="truckWeight">
                         </div>
                         <div class="form-group">
-                            <label >Payload Capacity (kg)</label>
-                            <input  type="number" placeholder="0" value="0" name="payloadCapacity" class="form-control">
+                            <label>Payload Capacity (kg)</label>
+                            <input type="number"  value="0" name="payloadCapacity" class="form-control" id="truckPayloadCapacity">
                         </div>
                         <div class="form-group">
-                            <label >Additional Equipment</label>
-                            <input type="text" name="additionalEquipment" class="form-control">
+                            <label>Additional Equipment</label>
+                            <input type="text" name="additionalEquipment" class="form-control" id="truckAdditionalEquipment">
                         </div>
                     </div>
 
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label>Truck height (m)</label>
-                            <input type="number" placeholder="0.00" value="0.00" step="0.01" name="truckHeight" class="form-control">
+                            <input type="number"  value="0.00" step="0.01" name="truckHeight"
+                                   class="form-control" id="truckHeight">
                         </div>
                         <div class="form-group">
                             <label>Trailer</label>
-                            <select  id="selectTrailer" class="custom-select" name="trailer">
+                            <select id="selectTrailer" class="custom-select" name="trailer">
                                 <option value="false" selected>No</option>
                                 <option value="true">Yes</option>
                             </select>
                         </div>
-                        <div id = "trailerInfo" class="d-none">
+                        <div id="trailerInfo" class="d-none">
                             <div class="form-group">
                                 <label>Trailer length (m)</label>
-                                <input type="number" placeholder="0.00"  value="0.00" step="0.01" name="trailerLength" class="form-control">
+                                <input type="number"  value="0.00" step="0.01" name="trailerLength"
+                                       class="form-control" id="trailerLength">
                             </div>
                             <div class="form-group">
                                 <label>Trailer width (m)</label>
-                                <input  type="number" placeholder="0.00"  value="0.00" step="0.01" name="trailerWidth" class="form-control">
+                                <input type="number"  value="0.00" step="0.01" name="trailerWidth"
+                                       class="form-control" id="trailerWidth">
                             </div>
                             <div class="form-group">
                                 <label>Trailer height (m)</label>
-                                <input  type="number"  placeholder="0.00" value="0.00" step="0.01" name="trailerHeight" class="form-control">
+                                <input type="number"  value="0.00" step="0.01" name="trailerHeight"
+                                       class="form-control" id="trailerHeight">
                             </div>
                             <div class="form-group">
                                 <label>Freight space (kg)</label>
-                                <input  type="number" placeholder="0"  value="0" name="freightSpace" class="form-control">
+                                <input type="number" value="0" name="freightSpace" class="form-control" id="truckFreightSpace">
                             </div>
                         </div>
 
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button  type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button id="btnTruckUpdate" type="submit" class="btn btn-info">Update</button>
+                    <button id="btnTruckInsert" type="submit" class="btn btn-primary">Insert</button>
                 </div>
             </div>
         </div>
@@ -300,22 +338,23 @@
 </form>
 
 <!-- Modal add new Bus -->
-<form id="formAddNewBus" th:object="${truckDto}" enctype="utf8">
+<form id="formAddNewBus" th:object="${busDto}" enctype="utf8">
     <div class="modal fade" id="modalInsertBus" tabindex="-1" role="dialog"
          aria-labelledby="modalInsertTruckInsertCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalInsertBusInsertLongTitle"><strong>New Bus</strong></h5>
+                    <h5 class="modal-title" id="modalInsertBusInsertLongTitle"><strong>Bus</strong></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body row">
                     <div class="col-lg-4">
+                        <input type="number" value="-1" readonly id="busId" name="id" class="d-none">
                         <div class="form-group">
-                            <label >Type of Truck</label>
-                            <select class="custom-select" name="vehicleSubtype">
+                            <label>Type of Truck</label>
+                            <select class="custom-select" name="vehicleSubtype" id="busSubtype">
                                 <option value="Band Bus">Band Bus</option>
                                 <option value="Minibus">Minibus</option>
                                 <option value="Party Bus">Party Bus</option>
@@ -323,82 +362,87 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label >Available</label>
-                            <select class="custom-select"  name="available">
+                            <label>Available</label>
+                            <select class="custom-select" name="available" id="busAvailable">
                                 <option value="true">Yes</option>
                                 <option value="false">No</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label >Manufacturer</label>
-                            <input type="text" name="manufacturer" class="form-control">
+                            <label>Manufacturer</label>
+                            <input type="text" name="manufacturer" class="form-control" id="busManufacturer">
                         </div>
                         <div class="form-group">
                             <label>year (yyyy)</label>
-                            <input  type="number" name="year" class="form-control">
+                            <input type="number" name="year" class="form-control" id="busYear">
                         </div>
                         <div class="form-group">
                             <label>Engine</label>
-                            <input type="text" name="engine" class="form-control">
+                            <input type="text" name="engine" class="form-control" id="busEngine">
                         </div>
                         <div class="form-group">
                             <label>Fuel tank (L)</label>
-                            <input  type="number" placeholder="0" value="0" name="fuelTank" class="form-control">
+                            <input type="number"  value="0" name="fuelTank" class="form-control" id="busFuelTank">
                         </div>
                         <div class="form-group">
-                            <label >Fuel Consumption (L/100km)</label>
-                            <input  type="number" placeholder="0" value="0" name="fuelConsumption" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4">
-                        <div class="form-group">
-                            <label >Registration Plate</label>
-                            <input  type="text" name="registrationPlate" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label >mileage (km)</label>
-                            <input type="number" placeholder="0" value="0" name="mileage" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label >Spare Tires</label>
-                            <input  type="number" placeholder="0" value="0" name="spareTires" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label >Weight (kg)</label>
-                            <input type="number" placeholder="0" value="0" name="weight" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label >Payload Capacity (kg)</label>
-                            <input  type="number" placeholder="0" value="0" name="payloadCapacity" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label >Additional Equipment</label>
-                            <input type="text" name="additionalEquipment" class="form-control">
+                            <label>Fuel Consumption (L/100km)</label>
+                            <input type="number" value="0" name="fuelConsumption" class="form-control"
+                                   id="busFuelConsumption">
                         </div>
                     </div>
 
                     <div class="col-lg-4">
                         <div class="form-group">
-                            <label >Two Story</label>
-                            <select class="custom-select"  name="twoStory">
+                            <label>Registration Plate</label>
+                            <input type="text" name="registrationPlate" class="form-control"
+                                   id="busRegistrationPlate">
+                        </div>
+                        <div class="form-group">
+                            <label>mileage (km)</label>
+                            <input type="number"  value="0" name="mileage" class="form-control" id="busMileage">
+                        </div>
+                        <div class="form-group">
+                            <label>Spare Tires</label>
+                            <input type="number"  value="0" name="spareTires" class="form-control" id="busSpareTires">
+                        </div>
+                        <div class="form-group">
+                            <label>Weight (kg)</label>
+                            <input type="number"  value="0" name="weight" class="form-control" id="busWeight">
+                        </div>
+                        <div class="form-group">
+                            <label>Payload Capacity (kg)</label>
+                            <input type="number"  value="0" name="payloadCapacity" class="form-control"
+                                   id="busPayloadCapacity">
+                        </div>
+                        <div class="form-group">
+                            <label>Additional Equipment</label>
+                            <input type="text" name="additionalEquipment" class="form-control" id="busAdditionalEquipment">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label>Two Story</label>
+                            <select class="custom-select" name="twoStory" id="busTwoStory">
                                 <option value="true">Yes</option>
                                 <option value="false">No</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label >Seats</label>
-                            <input type="number" placeholder="0" value="0" name="seats" class="form-control">
+                            <label>Seats</label>
+                            <input type="number"  value="0" name="seats" class="form-control" id="busSeats">
                         </div>
                         <div class="form-group">
                             <label>Bunker capacity (L)</label>
-                            <input type="number" placeholder="0" value="0" name="bunkerCapacity" class="form-control">
+                            <input type="number" value="0" name="bunkerCapacity" class="form-control"
+                                   id="busBunkerCapacity">
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button  type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button id="btnBusUpdate" type="submit" class="btn btn-info">Update</button>
+                    <button id="btnBusInsert" type="submit" class="btn btn-primary">Insert</button>
                 </div>
             </div>
         </div>
