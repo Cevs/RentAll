@@ -10,6 +10,9 @@ public class VehicleDto {
     @NotEmpty(message = "must not be empty")
     private String manufacturer;
     @NotNull
+    @NotEmpty(message = "must not be empty")
+    private String model;
+    @NotNull
     private int year;
     @NotNull
     private int fuelTank;
@@ -46,6 +49,14 @@ public class VehicleDto {
 
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public int getYear() {

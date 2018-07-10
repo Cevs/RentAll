@@ -13,11 +13,11 @@ public class Truck extends Vehicle {
     public Truck(){}
 
     public Truck(TruckDto truckDto, int renterId) {
-        super(truckDto.getId(), truckDto.getManufacturer(), truckDto.getYear(), truckDto.getFuelTank(),
-                truckDto.getMileage(),truckDto.getEngine(), truckDto.getFuelConsumption(), truckDto.getSpareTires(),
-                truckDto.getWeight(), truckDto.getPayloadCapacity(), truckDto.getAdditionalEquipment(),
-                truckDto.getRegistrationPlate(), "Truck", truckDto.getVehicleSubtype(),
-                truckDto.isAvailable(), truckDto.getPricePerDay(), renterId);
+        super(truckDto.getId(), truckDto.getManufacturer(), truckDto.getModel(), truckDto.getYear(),
+                truckDto.getFuelTank(), truckDto.getMileage(),truckDto.getEngine(), truckDto.getFuelConsumption(),
+                truckDto.getSpareTires(), truckDto.getWeight(), truckDto.getPayloadCapacity(),
+                truckDto.getAdditionalEquipment(), truckDto.getRegistrationPlate(), "Truck",
+                truckDto.getVehicleSubtype(), truckDto.isAvailable(), truckDto.getPricePerDay(), renterId);
         this.truckHeight = truckDto.getTruckHeight();
         this.trailer = truckDto.isTrailer();
         this.trailerLength = truckDto.getTrailerLength();

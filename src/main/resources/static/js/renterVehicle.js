@@ -1,7 +1,9 @@
 $("#insertError").hide();
 $("#insertSuccess").hide();
+var searchValue = "";
+var typeSelected = "All";
 $(document).ready(function () {
-    getAllRenterVehicles();
+    getRenterVehicles();
 
     $("#addNewCar").on("click", function () {
         populateModalCar(null);
@@ -16,7 +18,7 @@ $(document).ready(function () {
             insertNewCar();
         }else if(btnId === "btnCarUpdate"){
             updateCar();
-        }//TODO delete option
+        }
 
     });
 
@@ -32,7 +34,7 @@ $(document).ready(function () {
             insertNewTruck();
         }else if(btnId === "btnTruckUpdate"){
             updateTruck();
-        }//TODO delete option
+        }
     });
 
     $("#addNewBus").on("click",function(){
@@ -47,7 +49,7 @@ $(document).ready(function () {
             insertNewBus();
         }else if (btnId === "btnBusUpdate"){
             updateBus();
-        }//TODO delete option
+        }
     });
 
     $("#selectTrailer").change(function () {
@@ -62,24 +64,42 @@ $(document).ready(function () {
     //Handle the event of changing a type of vehicles that will be shown in the table
     $("#vehicleTypeMenu .dropdown-menu a").click(function(){
         typeSelected = $(this).text();
-        if(typeSelected ==="All"){
-            getAllRenterVehicles();
-        }else{
-            getAllRenterVehiclesOfType(typeSelected);
-        }
         $("#vehicleTypeMenu button").text(typeSelected);
+        getRenterVehicles();
     });
 
+    $("#searchInput").keyup(function () {
+        var input = $(this);
+        searchValue = input.val();
+        getRenterVehicles();
+    });
 
 });
 
+function getRenterVehicles(){
+    endPoint = window.location;
+    if(typeSelected == "All"){
+        endPoint += "/all";
+    }else{
+        endPoint += "/"+typeSelected;
+    }
+    $.ajax({
+        async: false,
+        type: "GET",
+        url: endPoint,
+        data:{"data":searchValue},
+        success: function (data) {
+            updateTableData(data);
+        }
+    });
+}
 
 function updateTableView(){
-    selectedType = $("#btnShowVehicleType").text();
-    if(selectedType == "All"){
+    typeSelected = $("#btnShowVehicleType").text();
+    if(typeSelected == "All"){
         getAllRenterVehicles();
     }else{
-        getAllRenterVehiclesOfType(selectedType);
+        getAllRenterVehiclesOfType(typeSelected);
     }
 }
 
@@ -202,7 +222,7 @@ function insertNewTruck(){
 }
 
 
-function getAllRenterVehicles() {
+/*function getAllRenterVehicles() {
     endPoint = window.location + "/all";
     $.ajax({
         async: false,
@@ -212,7 +232,7 @@ function getAllRenterVehicles() {
             updateTableData(data);
         }
     });
-}
+}*/
 
 function getAllRenterVehiclesOfType(typeSelected) {
     endPoint = window.location + "/"+typeSelected;
@@ -229,10 +249,11 @@ function getAllRenterVehiclesOfType(typeSelected) {
 function updateTableData(data) {
     $("#vehicleTable tbody>tr").remove();
     $("#vehicleTable thead>tr").remove();
-    $tr = $("<tr>").append(
+    $tr = $("<tr class='text-center'>").append(
         $("<th>").text("#"),
         $("<th >").text("Id"),
         $("<th>").text("Manufacturer"),
+        $("<th>").text("Model"),
         $("<th>").text("Year"),
         $("<th>").text("Registration Plate"),
         $("<th>").text("Type"),
@@ -243,16 +264,18 @@ function updateTableData(data) {
     )
         .appendTo("#vehicleTable thead");
     $.each(data, function (i, item) {
-        $tr = $("<tr>").append(
+        $tr = $("<tr class='text-center'>").append(
             $("<th>").text(i + 1),
             $("<td id='tableId'>").text(item.id),
             $("<td id='tableManufacturer'>").text(item.manufacturer),
+            $("<td id='tableModel'>").text(item.model),
             $("<td id='tableYear'>").text(item.year),
             $("<td id='tableRegistrationPlate'>").text(item.registrationPlate),
             $("<td id='tableType'>").text(item.vehicleType),
             $("<td id='tableSubtype'>").text(item.vehicleSubtype),
             $("<td id='tableAvailable'>").text(item.available),
-            $("<td id='tablePrice'>").text(item.pricePerDay),
+
+            $("<td id='tablePrice'>").html("<p class='m-0'>"+item.pricePerDay+" &#8364</p>"),
             $("<td id='btnDeleteVehicle'>").html("<button class='btn btn-danger'><i class='far fa-trash-alt'></i></button>")
         )
             .appendTo("#vehicleTable");
@@ -266,7 +289,7 @@ function updateTableData(data) {
             id = parent.find("#tableId").text();
             deleteVehicle(id);
         }else{
-            vehicleType = parent.closest('tr').find('td:eq(4)').text();
+            vehicleType = parent.closest('tr').find('td:eq(5)').text();
             id = parent.find("#tableId").text();
 
             if(vehicleType === "Car"){
@@ -348,6 +371,7 @@ function populateModalCar(data){
         $("#modalInsertCar .modal-body #carAvailable").val(data.available+""); //Needs to be string
         $("#modalInsertCar .modal-body #carSubtype").val(data.vehicleSubtype);
         $("#modalInsertCar .modal-body #carManufacturer").val(data.manufacturer);
+        $("#modalInsertCar .modal-body #carModel").val(data.model);
         $("#modalInsertCar .modal-body #carYear").val(data.year);
         $("#modalInsertCar .modal-body #carEngine").val(data.engine);
         $("#modalInsertCar .modal-body #carFuelTank").val(data.fuelTank);
@@ -370,6 +394,7 @@ function populateModalCar(data){
         $("#modalInsertCar .modal-body #carAvailable").val("true"); //Needs to be string
         $("#modalInsertCar .modal-body #carSubtype").val("Caravan");
         $("#modalInsertCar .modal-body #carManufacturer").val("");
+        $("#modalInsertCar .modal-body #carModel").val("");
         $("#modalInsertCar .modal-body #carYear").val(0);
         $("#modalInsertCar .modal-body #carEngine").val("");
         $("#modalInsertCar .modal-body #carFuelTank").val(0);
@@ -397,6 +422,7 @@ function populateModalTruck(data){
         $("#modalInsertTruck .modal-body #truckAvailable").val(data.available+""); //Needs to be string
         $("#modalInsertTruck .modal-body #truckSubtype").val(data.vehicleSubtype);
         $("#modalInsertTruck .modal-body #truckManufacturer").val(data.manufacturer);
+        $("#modalInsertTruck .modal-body #truckModel").val(data.model);
         $("#modalInsertTruck .modal-body #truckYear").val(data.year);
         $("#modalInsertTruck .modal-body #truckEngine").val(data.engine);
         $("#modalInsertTruck .modal-body #truckFuelTank").val(data.fuelTank);
@@ -427,6 +453,7 @@ function populateModalTruck(data){
         $("#modalInsertTruck .modal-body #truckAvailable").val("true"); //Needs to be string
         $("#modalInsertTruck .modal-body #truckSubtype").val("Delivery");
         $("#modalInsertTruck .modal-body #truckManufacturer").val("");
+        $("#modalInsertTruck .modal-body #truckModel").val("");
         $("#modalInsertTruck .modal-body #truckYear").val(0);
         $("#modalInsertTruck .modal-body #truckEngine").val("");
         $("#modalInsertTruck .modal-body #truckFuelTank").val(0);
@@ -459,6 +486,7 @@ function populateModalBus(data){
         $("#modalInsertBus .modal-body #busAvailable").val(data.available+""); //Needs to be string
         $("#modalInsertBus .modal-body #busSubtype").val(data.vehicleSubtype);
         $("#modalInsertBus .modal-body #busManufacturer").val(data.manufacturer);
+        $("#modalInsertBus .modal-body #busManufacturer").val(data.model);
         $("#modalInsertBus .modal-body #busYear").val(data.year);
         $("#modalInsertBus .modal-body #busEngine").val(data.engine);
         $("#modalInsertBus .modal-body #busFuelTank").val(data.fuelTank);
@@ -480,6 +508,7 @@ function populateModalBus(data){
         $("#modalInsertBus .modal-body #busId").val(-1);
         $("#modalInsertBus .modal-body #busAvailable").val("true"); //Needs to be string
         $("#modalInsertBus .modal-body #busSubtype").val("Band Bus");
+        $("#modalInsertBus .modal-body #busManufacturer").val("");
         $("#modalInsertBus .modal-body #busManufacturer").val("");
         $("#modalInsertBus .modal-body #busYear").val(0);
         $("#modalInsertBus .modal-body #busEngine").val("");

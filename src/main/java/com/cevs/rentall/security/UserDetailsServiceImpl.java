@@ -1,6 +1,6 @@
 package com.cevs.rentall.security;
 
-import com.cevs.rentall.dao.UserDao;
+import com.cevs.rentall.dao.IUserDao;
 import com.cevs.rentall.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,11 +17,11 @@ import java.util.Set;
 public class UserDetailsServiceImpl implements UserDetailsService{
 
     @Autowired
-    UserDao userDao;
+    IUserDao IUserDao;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userDao.findUserByEmail(email);
+        User user = IUserDao.findUserByEmail(email);
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         grantedAuthorities.add(new SimpleGrantedAuthority(user.getUserType()));
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),grantedAuthorities);

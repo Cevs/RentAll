@@ -18,8 +18,8 @@ public interface IVehicleService {
     boolean addNewBus(BusDto busDto);
     boolean updateBus(BusDto busDto);
     boolean deleteVehicle(int vehicleId);
-    List<Vehicle> getAllVehicles();
-    List<Vehicle> getAllVehiclesOfType(String vehicleType);
+    List<Vehicle> getAllVehicles(String search);
+    List<Vehicle> getAllVehiclesOfType(String vehicleType, String search);
     Car findCarById(int carId);
     Truck findTruckById(int truckId);
     Bus findBusById(int busId);

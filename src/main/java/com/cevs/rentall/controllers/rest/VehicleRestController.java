@@ -1,4 +1,4 @@
-package com.cevs.rentall.controllers;
+package com.cevs.rentall.controllers.rest;
 
 import com.cevs.rentall.dto.BusDto;
 import com.cevs.rentall.dto.CarDto;
@@ -23,13 +23,13 @@ public class VehicleRestController {
     IVehicleService vehicleService;
 
     @GetMapping(path="/all")
-    public List<Vehicle> getAll(){
-        return vehicleService.getAllVehicles();
+    public List<Vehicle> getAll(@RequestParam("data") String searchValue){
+        return vehicleService.getAllVehicles(searchValue);
     }
 
     @GetMapping(path="/{type}")
-    public List<Vehicle> getType(@PathVariable String type){
-        return vehicleService.getAllVehiclesOfType(type);
+    public List<Vehicle> getType(@PathVariable String type, @RequestParam("data") String searchValue){
+        return vehicleService.getAllVehiclesOfType(type, searchValue);
     }
 
     @GetMapping(path="/car/{id}")

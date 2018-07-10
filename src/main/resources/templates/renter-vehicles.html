@@ -17,14 +17,14 @@
     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
         <a class="navbar-brand" href="">RentAll</a>
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li sec:authorize="hasAuthority('Renter')" class="nav-item active">
-                <a class="nav-link" href="#">Index <span class="sr-only">(current)</span></a>
-            </li>
             <li sec:authorize="hasAuthority('Renter')" class="nav-item">
+                <a class="nav-link" href="/index">Index</a>
+            </li>
+            <li sec:authorize="hasAuthority('Renter')" class="nav-item active">
                 <a class="nav-link" href="/renter/vehicle">Vehicles</a>
             </li>
             <li sec:authorize="hasAuthority('Renter')" class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
+                <a class="nav-link disabled" href="/renter/reservation">Reservations</a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="post">
@@ -57,6 +57,12 @@
                 <a class="dropdown-item" id="showTrucks">Truck</a>
             </div>
         </div>
+        <div class="input-group mb-3 w-25" style="float:right">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-default">Search</span>
+            </div>
+            <input id = "searchInput" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+        </div>
     </div>
     <br/>
     <div style="clear:both"></div>
@@ -76,12 +82,13 @@
             <th>#</th>
             <th>Id</th>
             <th>Manufacture</th>
+            <th>Model</th>
             <th>Year</th>
             <th>Registration Plate</th>
             <th>Type</th>
             <th>Subtype</th>
             <th>Available</th>
-            <th>Price per day</th>
+            <th><p>Price per day (&#8364/day)</p></th>
             <th></th>
         </tr>
         </thead>
@@ -90,6 +97,7 @@
             <th th:text="${i.count}" scope="row"></th>
             <th th:text="${item.id}" scope="row" id="tableId"></th>
             <td th:text="${item.manufacturer}" id="tableManufacturer"></td>
+            <td th:text="${item.model}" id="tableModel"></td>
             <td th:text="${item.year}" id="tableYear"></td>
             <td th:text="${item.registrationPlate}" id="tableRegistrationPlate"></td>
             <td th:text="${item.vehicleType}" id="tableType"></td>
@@ -136,9 +144,19 @@
                             <input type="text" id="carManufacturer" name="manufacturer" class="form-control">
                         </div>
                         <div class="form-group">
+                            <label>Model</label>
+                            <input type="text" id="carModel" name="model" class="form-control">
+                        </div>
+                        <div class="form-group">
                             <label>year (yyyy)</label>
                             <input id="carYear" type="number" name="year" class="form-control">
                         </div>
+                        <div class="form-group">
+                            <label>Registration Plate</label>
+                            <input id="carRegistrationPlate" type="text" name="registrationPlate" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
                         <div class="form-group">
                             <label>Engine</label>
                             <input id="carEngine" type="text" name="engine" class="form-control">
@@ -152,12 +170,6 @@
                             <label>Fuel Consumption (L/100km)</label>
                             <input id="carFuelConsumption" type="number"  value="0"
                                    name="fuelConsumption" class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="form-group">
-                            <label>Registration Plate</label>
-                            <input id="carRegistrationPlate" type="text" name="registrationPlate" class="form-control">
                         </div>
                         <div class="form-group">
                             <label>mileage (km)</label>
@@ -188,7 +200,7 @@
 
                     <div class="col-lg-4">
                         <div class="form-group">
-                            <label>Price per day (&euro/day)</label>
+                            <label>Price per day (&#8364/day)</label>
                             <input id="carPricePerDay" type="number" value="0" name="pricePerDay"
                                    class="form-control">
                         </div>
@@ -253,9 +265,20 @@
                             <input type="text" name="manufacturer" class="form-control" id="truckManufacturer">
                         </div>
                         <div class="form-group">
+                            <label>Model</label>
+                            <input type="text" id="truckModel" name="model" class="form-control">
+                        </div>
+                        <div class="form-group">
                             <label>year (yyyy)</label>
                             <input type="number" name="year" class="form-control" id="truckYear">
                         </div>
+                        <div class="form-group">
+                            <label>Registration Plate</label>
+                            <input type="text" name="registrationPlate" class="form-control" id="truckRegistrationPlate">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
                         <div class="form-group">
                             <label>Engine</label>
                             <input type="text" name="engine" class="form-control" id="truckEngine">
@@ -267,13 +290,6 @@
                         <div class="form-group">
                             <label>Fuel Consumption (L/100km)</label>
                             <input type="number" value="0" name="fuelConsumption" class="form-control" id="truckFuelConsumption">
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4">
-                        <div class="form-group">
-                            <label>Registration Plate</label>
-                            <input type="text" name="registrationPlate" class="form-control" id="truckRegistrationPlate">
                         </div>
                         <div class="form-group">
                             <label>mileage (km)</label>
@@ -299,7 +315,7 @@
 
                     <div class="col-lg-4">
                         <div class="form-group">
-                            <label>Price per day (&euro/day)</label>
+                            <label>Price per day (&#8364/day)</label>
                             <input id="truckPricePerDay" type="number" value="0" name="pricePerDay"
                                    class="form-control">
                         </div>
@@ -385,9 +401,21 @@
                             <input type="text" name="manufacturer" class="form-control" id="busManufacturer">
                         </div>
                         <div class="form-group">
+                            <label>Model</label>
+                            <input type="text" id="busModel" name="model" class="form-control">
+                        </div>
+                        <div class="form-group">
                             <label>year (yyyy)</label>
                             <input type="number" name="year" class="form-control" id="busYear">
                         </div>
+                        <div class="form-group">
+                            <label>Registration Plate</label>
+                            <input type="text" name="registrationPlate" class="form-control"
+                                   id="busRegistrationPlate">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
                         <div class="form-group">
                             <label>Engine</label>
                             <input type="text" name="engine" class="form-control" id="busEngine">
@@ -400,14 +428,6 @@
                             <label>Fuel Consumption (L/100km)</label>
                             <input type="number" value="0" name="fuelConsumption" class="form-control"
                                    id="busFuelConsumption">
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4">
-                        <div class="form-group">
-                            <label>Registration Plate</label>
-                            <input type="text" name="registrationPlate" class="form-control"
-                                   id="busRegistrationPlate">
                         </div>
                         <div class="form-group">
                             <label>mileage (km)</label>
@@ -434,7 +454,7 @@
 
                     <div class="col-lg-4">
                         <div class="form-group">
-                            <label>Price per day (&euro/day)</label>
+                            <label>Price per day (&#8364/day)</label>
                             <input id="busPricePerDay" type="number" value="0" name="pricePerDay"
                                    class="form-control">
                         </div>
@@ -467,7 +487,7 @@
 </form>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="/js/vehicleDatatable.js"></script>
+<script src="/js/renterVehicle.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
         integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
         crossorigin="anonymous"></script>

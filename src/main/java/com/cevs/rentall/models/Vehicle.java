@@ -5,6 +5,7 @@ import java.sql.Date;
 public class Vehicle {
     private int id;
     private String manufacturer;
+    private String model;
     private int year;
     private int fuelTank;
     private int mileage;
@@ -24,13 +25,14 @@ public class Vehicle {
     public Vehicle() {
     }
 
-    public Vehicle(int id, String manufacturer, int year, int fuelTank,
+    public Vehicle(int id, String manufacturer, String  model, int year, int fuelTank,
                    int mileage, String engine, int fuelConsumption, int spareTires,
                    int weight, int payloadCapacity, String additionalEquipment,
                    String registrationPlate, String vehicleType, String vehicleSubtype,
                    boolean available, int pricePerDay, int renterId) {
         this.id=id;
         this.manufacturer = manufacturer;
+        this.model = model;
         this.year = year;
         this.fuelTank = fuelTank;
         this.mileage = mileage;
@@ -62,6 +64,14 @@ public class Vehicle {
 
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public int getYear() {

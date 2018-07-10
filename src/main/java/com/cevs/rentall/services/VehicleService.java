@@ -1,6 +1,6 @@
 package com.cevs.rentall.services;
 
-import com.cevs.rentall.dao.VehicleDao;
+import com.cevs.rentall.dao.IVehicleDao;
 import com.cevs.rentall.dto.BusDto;
 import com.cevs.rentall.dto.CarDto;
 import com.cevs.rentall.dto.TruckDto;
@@ -17,7 +17,7 @@ import java.util.List;
 public class VehicleService implements  IVehicleService{
 
     @Autowired
-    VehicleDao vehicleDao;
+    IVehicleDao IVehicleDao;
 
     @Override
     public boolean addNewCar(CarDto carDto) {
@@ -25,7 +25,7 @@ public class VehicleService implements  IVehicleService{
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User renter = (User) auth.getPrincipal();
             Car car = new Car(carDto,renter.getId());
-            vehicleDao.insertCar(car);
+            IVehicleDao.insertCar(car);
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -39,7 +39,7 @@ public class VehicleService implements  IVehicleService{
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User renter = (User) auth.getPrincipal();
             Truck truck = new Truck(truckDto, renter.getId());
-            vehicleDao.insertTruck(truck);
+            IVehicleDao.insertTruck(truck);
             return true;
         }catch (SQLException e){
             e.printStackTrace();
@@ -53,7 +53,7 @@ public class VehicleService implements  IVehicleService{
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User renter = (User) auth.getPrincipal();
             Truck truck = new Truck(truckDto, renter.getId());
-            vehicleDao.updateTruck(truck);
+            IVehicleDao.updateTruck(truck);
             return true;
         }catch (SQLException e){
             e.printStackTrace();;
@@ -67,7 +67,7 @@ public class VehicleService implements  IVehicleService{
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User renter = (User) auth.getPrincipal();
             Bus bus = new Bus(busDto, renter.getId());
-            vehicleDao.insertBus(bus);
+            IVehicleDao.insertBus(bus);
             return true;
         }catch (SQLException e){
             e.printStackTrace();
@@ -81,7 +81,7 @@ public class VehicleService implements  IVehicleService{
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User renter = (User) auth.getPrincipal();
             Bus bus = new Bus(busDto, renter.getId());
-            vehicleDao.updateBus(bus);
+            IVehicleDao.updateBus(bus);
             return  true;
         }catch (SQLException e){
             e.printStackTrace();
@@ -94,7 +94,7 @@ public class VehicleService implements  IVehicleService{
         try{
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User renter = (User) auth.getPrincipal();
-            vehicleDao.deleteVehicle(renter.getId(), vehicleId);
+            IVehicleDao.deleteVehicle(renter.getId(), vehicleId);
             return true;
         }catch (SQLException e){
             e.printStackTrace();
@@ -108,7 +108,7 @@ public class VehicleService implements  IVehicleService{
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User renter = (User) auth.getPrincipal();
             Car car = new Car(carDto, renter.getId());
-            vehicleDao.updateCar(car);
+            IVehicleDao.updateCar(car);
             return true;
         }catch(SQLException e){
             e.printStackTrace();
@@ -117,37 +117,37 @@ public class VehicleService implements  IVehicleService{
     }
 
     @Override
-    public List<Vehicle> getAllVehicles() {
+    public List<Vehicle> getAllVehicles(String search) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User renter = (User) auth.getPrincipal();
-        return vehicleDao.getRenterVehicles(renter.getId());
+        return IVehicleDao.getRenterVehicles(renter.getId(),search);
     }
 
     @Override
-    public List<Vehicle> getAllVehiclesOfType(String vehicleType) {
+    public List<Vehicle> getAllVehiclesOfType(String vehicleType, String search) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User renter = (User) auth.getPrincipal();
-        return vehicleDao.getRenterVehiclesOfType(renter.getId(), vehicleType);
+        return IVehicleDao.getRenterVehiclesOfType(renter.getId(), vehicleType, search);
     }
 
     @Override
     public Car findCarById(int carId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User renter = (User) auth.getPrincipal();
-        return  vehicleDao.getCarById(renter.getId(), carId);
+        return  IVehicleDao.getCarById(renter.getId(), carId);
     }
 
     @Override
     public Truck findTruckById(int truckId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User renter = (User) auth.getPrincipal();
-        return vehicleDao.getTruckById(renter.getId(), truckId);
+        return IVehicleDao.getTruckById(renter.getId(), truckId);
     }
 
     @Override
     public Bus findBusById(int busId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User renter = (User) auth.getPrincipal();
-        return  vehicleDao.getBusById(renter.getId(), busId);
+        return  IVehicleDao.getBusById(renter.getId(), busId);
     }
 }
