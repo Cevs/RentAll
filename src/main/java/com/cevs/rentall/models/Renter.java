@@ -2,10 +2,15 @@ package com.cevs.rentall.models;
 
 import com.cevs.rentall.dto.RenterDto;
 
+import java.io.IOException;
+import java.util.Base64;
+
 public class Renter extends User {
     private String companyName;
     private String companyPhoneNumber;
     private String bankAccount;
+
+    public Renter(){}
 
     public Renter(int id, String email, String password, String userType, Location location,
                   String companyName, String companyPhoneNumber, String bankAccount) {

@@ -1,6 +1,10 @@
 package com.cevs.rentall.models;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.Base64;
 
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -9,7 +13,7 @@ public class User implements Serializable {
     private String password;
     private String userType;
     private Location location;
-
+    private MultipartFile image;
     public User() {
     }
 
@@ -70,6 +74,25 @@ public class User implements Serializable {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public MultipartFile getImage() {
+        return image;
+    }
+
+    public void setImage(MultipartFile image) {
+        this.image = image;
+    }
+
+    public String encodeImage(){
+        try {
+            byte[]  encoded = Base64.getEncoder().encode(getImage().getBytes());
+            return (new String(encoded));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return  "";
+
     }
 
     @Override

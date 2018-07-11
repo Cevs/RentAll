@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
+            aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+        <a class="navbar-brand" href="">RentAll</a>
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="/index">Index <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="post">
+            <p class="m-0 navbar-user"><span sec:authentication="principal.email"></span></p>
+            <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Logout</button>
+        </form>
+    </div>
+</nav>
+<div class="container">
+    <h1 class="mt-5 mb-5 text-center">Profile Information</h1>
+    <form id="formUpdate" th:object="${buyerDto}" enctype="multipart/form-data">
+        <div class="row mt-5">
+            <div  id="msgSuccess" class="alert alert-success login-message mt-3 d-none w-75 mx-auto">
+                <strong><p class="p-0 m-0 text-center"/>Update successful</strong>
+            </div>
+            <div id="msgFail" class="alert alert-warning login-message mt-3 d-none w-75 mx-auto">
+                <strong><p class="p-0 m-0 text-center" />Update failed</strong>
+            </div>
+            <div class="row mx-auto">
+                <div class="col-lg-5 pt-4">
+                    <table class="mx-auto profile-table">
+                        <tr>
+                            <td>Email</td>
+                            <td><input type="text" id="email" name="email" th:value="${buyer.email}" /></td>
+                        </tr>
+                        <tr>
+                            <td>Password</td>
+                            <td><input type="text" id="password" name="password" th:value="${buyer.password}"/></td>
+                        </tr>
+                        <tr>
+                            <td>Country</td>
+                            <td><input type="text" id="country" name="country"
+                                       th:value="${buyer.location.country}"/></td>
+                        </tr>
+                        <tr>
+                            <td>City</td>
+                            <td><input type="text" id="city" name="city"
+                                       th:value="${buyer.location.city}"/></td>
+                        </tr>
+                        <tr>
+                            <td>Address</td>
+                            <td><input type="text" id="address" name="address"
+                                       th:value="${buyer.location.address}"/></td>
+                        </tr>
+                        <tr>
+                            <td>ZipCode</td>
+                            <td><input type="text" id="zipCode" name="zipCode"
+                                       th:value="${buyer.location.zipCode}"/></td>
+                        </tr>
+                        <tr>
+                            <td>Firstname</td>
+                            <td><input type="text" id="firstname" name="firstname"
+                                       th:value="${buyer.firstname}"/></td>
+                        </tr>
+                        <tr>
+                            <td>Lastname</td>
+                            <td><input type="text" id="lastname" name="lastname"
+                                       th:value="${buyer.lastname}"/></td>
+                        </tr>
+                        <tr>
+                            <td>Phone number</td>
+                            <td><input type="text" id="phoneNumber" name="phoneNumber"
+                                       th:value="${buyer.phoneNumber}"/></td>
+                        </tr>
+                        <tr>
+                            <td>Birth date</td>
+                            <td><input type="text" id="birthDate" name="birthDate"
+                                       th:value="${#dates.format(buyer. birthDate, 'dd.MM.yyyy')}"/></td>
+
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-lg-4">
+                    <div class="thumbnail">
+                        <div th:if="${buyer.image != null}" class="view-img">
+                            <img  th:src="@{'data:image/jpeg;base64,'+${buyer.encodeImage()}}">
+                        </div>
+                        <div th:if="${buyer.image == null}" class="view-img">
+                            <img  src="/images/profile.png">
+                        </div>
+
+                        <input type="file" id="upload" name="file">
+                        <button id="btnSelectImage" type="button" class="btn btn-dark w-100">Select Image</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <br/>
+        <div class="row">
+            <div class="mx-auto w-50">
+                <button id="btnUpdateProfile" type="submit" class="btn btn-success w-75">Save</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/profile.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+</body>
+</html>

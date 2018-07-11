@@ -2,6 +2,7 @@ package com.cevs.rentall.dto;
 
 import com.cevs.rentall.dto.com.cevs.rentall.dto.validation.PasswordMatches;
 import com.cevs.rentall.dto.com.cevs.rentall.dto.validation.ValidEmail;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -42,6 +43,8 @@ public class RenterDto {
     @NotNull
     @NotEmpty(message = "Must not be empty")
     private String bankAccount;
+
+    private MultipartFile file;
 
     public String getEmail() {
         return email;
@@ -129,5 +132,13 @@ public class RenterDto {
 
     public void setBankAccount(String bankAccount) {
         this.bankAccount = bankAccount;
+    }
+
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
     }
 }

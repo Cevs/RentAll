@@ -24,7 +24,10 @@
                 <a class="nav-link" href="/renter/vehicle">Vehicles</a>
             </li>
             <li sec:authorize="hasAuthority('Renter')" class="nav-item">
-                <a class="nav-link disabled" href="/renter/reservation">Reservations</a>
+                <a class="nav-link" href="/renter/reservation">Reservations</a>
+            </li>
+            <li sec:authorize="hasAuthority('Renter')" class="nav-item">
+                <a class="nav-link" href="/renter/profile">Profile</a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="post">

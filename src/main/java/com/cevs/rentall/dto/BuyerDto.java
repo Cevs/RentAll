@@ -3,6 +3,7 @@ package com.cevs.rentall.dto;
 import com.cevs.rentall.dto.com.cevs.rentall.dto.validation.PasswordMatches;
 import com.cevs.rentall.dto.com.cevs.rentall.dto.validation.ValidEmail;
 import org.jboss.logging.Message;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
@@ -42,6 +43,8 @@ public class BuyerDto {
     private String rePassword;
 
     private String  userType = "Buyer";
+
+    private MultipartFile file;
 
     public String getFirstname() {
         return firstname;
@@ -137,5 +140,13 @@ public class BuyerDto {
 
     public void setUserType(String userType) {
         this.userType = userType;
+    }
+
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
     }
 }
