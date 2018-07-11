@@ -7,62 +7,62 @@ $(document).ready(function () {
 
     $("#addNewCar").on("click", function () {
         populateModalCar(null);
-        $("#modalInsertCar").modal({backdrop: 'static', keyboard: false},"show");
+        $("#modalInsertCar").modal({backdrop: 'static', keyboard: false}, "show");
     });
 
     //Insert/Update car
     $("#formAddNewCar").submit(function (event) {
         event.preventDefault();
         btnId = $(document.activeElement).attr('id')
-        if(btnId === "btnCarInsert"){
-            insertNewCar();
-        }else if(btnId === "btnCarUpdate"){
+        if (btnId === "btnCarInsert") {
+            insertNewCar(this);
+        } else if (btnId === "btnCarUpdate") {
             updateCar();
         }
 
     });
 
-    $("#addNewTruck").on("click",function(){
+    $("#addNewTruck").on("click", function () {
         populateModalTruck(null);
         $("#modalInsertTruck").modal({backdrop: 'static', keyboard: false}, "show");
     });
 
-    $("#formAddNewTruck").on("submit",function(){
+    $("#formAddNewTruck").on("submit", function () {
         event.preventDefault();
         btnId = $(document.activeElement).attr('id')
-        if(btnId === "btnTruckInsert"){
-            insertNewTruck();
-        }else if(btnId === "btnTruckUpdate"){
+        if (btnId === "btnTruckInsert") {
+            insertNewTruck(this);
+        } else if (btnId === "btnTruckUpdate") {
             updateTruck();
         }
     });
 
-    $("#addNewBus").on("click",function(){
+    $("#addNewBus").on("click", function () {
         populateModalBus(null);
-        $("#modalInsertBus").modal({backdrop: 'static', keyboard: false},"show");
+        $("#modalInsertBus").modal({backdrop: 'static', keyboard: false}, "show");
     });
 
-    $("#formAddNewBus").on("submit", function(){
+    $("#formAddNewBus").on("submit", function () {
         event.preventDefault();
         btnId = $(document.activeElement).attr('id');
-        if(btnId === "btnBusInsert"){
-            insertNewBus();
-        }else if (btnId === "btnBusUpdate"){
+        if (btnId === "btnBusInsert") {
+            insertNewBus(this);
+        } else if (btnId === "btnBusUpdate") {
             updateBus();
         }
     });
 
     $("#selectTrailer").change(function () {
-        var v = $( "#selectTrailer option:selected" ).text();
-        if(v==="Yes"){
+        var v = $("#selectTrailer option:selected").text();
+        if (v === "Yes") {
             $("#trailerInfo").removeClass("d-none");
-        }else{
+        } else {
             $("#trailerInfo").addClass("d-none");
         }
     });
 
     //Handle the event of changing a type of vehicles that will be shown in the table
-    $("#vehicleTypeMenu .dropdown-menu a").click(function(){
+    $("#vehicleTypeMenu .dropdown-menu a").click(function () {
         typeSelected = $(this).text();
         $("#vehicleTypeMenu button").text(typeSelected);
         getRenterVehicles();
@@ -74,66 +74,103 @@ $(document).ready(function () {
         getRenterVehicles();
     });
 
+    $("#uploadCar").change(function () {
+        readURL(this);
+    });
+
+    $('#btnSelectImageCar').on('click', function () {
+        $('#uploadCar').trigger('click');
+
+    });
+
+    $("#uploadBus").change(function () {
+        readURL(this);
+    });
+
+    $('#btnSelectImageBus').on('click', function () {
+        $('#uploadBus').trigger('click');
+
+    });
+
+    $("#uploadTruck").change(function () {
+        readURL(this);
+    });
+
+    $('#btnSelectImageTruck').on('click', function () {
+        $('#uploadTruck').trigger('click');
+
+    });
+
 });
 
-function getRenterVehicles(){
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('.view-img-vehicle img').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function getRenterVehicles() {
     endPoint = window.location;
-    if(typeSelected == "All"){
+    if (typeSelected == "All") {
         endPoint += "/all";
-    }else{
-        endPoint += "/"+typeSelected;
+    } else {
+        endPoint += "/" + typeSelected;
     }
     $.ajax({
         async: false,
         type: "GET",
         url: endPoint,
-        data:{"data":searchValue},
+        data: {"data": searchValue},
         success: function (data) {
             updateTableData(data);
         }
     });
 }
 
-function updateTableView(){
-    typeSelected = $("#btnShowVehicleType").text();
-    if(typeSelected == "All"){
-        getAllRenterVehicles();
-    }else{
-        getAllRenterVehiclesOfType(typeSelected);
-    }
-}
 
-function insertNewBus(){
+function insertNewBus(event) {
     endPoint = window.location + "/bus/new";
-    formData = $("#formAddNewBus").serialize();
-    $.post(endPoint, formData, function (data) {
-        if(data=="true"){
-            $("#insertError").hide();
-            $("#insertSuccess").show();
-            updateTableView();
-        }else{
-            $("#insertError").show();
-            $("#insertSuccess").hide();
+    formData = new FormData(event);
+    $.ajax({
+        url: endPoint,
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response == "true") {
+                $("#insertError").hide();
+                $("#insertSuccess").show();
+                getRenterVehicles();
+            } else {
+                $("#insertError").show();
+                $("#insertSuccess").hide();
+            }
         }
-
     });
     $('#modalInsertBus').modal('hide');
     $(".modal-body input").val("")
 }
 
-function updateBus(){
+function updateBus() {
     endPoint = window.location + "/bus/update";
     formData = $("#formAddNewBus").serialize();
     $.ajax({
-        url:endPoint,
-        type:'PUT',
-        data:formData,
-        success:function (response) {
-            if(response == "true") {
-                updateTableView();
+        url: endPoint,
+        type: 'PUT',
+        data: formData,
+        success: function (response) {
+            if (response == "true") {
+                getRenterVehicles();
                 $(".modal-body input").val("")
                 $("#modalInsertBus").modal("hide");
-            }else{
+            } else {
                 alert("Failer");
                 $(".modal-body input").val("")
                 $("#modalInsertBus").modal("hide");
@@ -142,59 +179,64 @@ function updateBus(){
     });
 }
 
-
-function insertNewCar(){
+function insertNewCar(event) {
     endPoint = window.location + "/car/new";
-    formData = $("#formAddNewCar").serialize();
-    $.post(endPoint, formData, function (data) {
-        if(data=="true"){
-            $("#insertError").hide();
-            $("#insertSuccess").show();
-            updateTableView();
-        }else{
-            $("#insertError").show();
-            $("#insertSuccess").hide();
+    formData = new FormData(event);
+    $.ajax({
+        url: endPoint,
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response == "true") {
+                $("#insertError").hide();
+                $("#insertSuccess").show();
+                getRenterVehicles();
+            } else {
+                $("#insertError").show();
+                $("#insertSuccess").hide();
+            }
         }
-
     });
     $('#modalInsertCar').modal('hide');
     $(".modal-body input").val("")
 }
 
-function updateCar(){
+function updateCar() {
     endPoint = window.location + "/car/update";
     formData = $("#formAddNewCar").serialize();
     $.ajax({
-       url:endPoint,
-       type:'PUT',
-       data:formData,
-       success:function (response) {
-           if(response == "true") {
-               updateTableView();
-               $(".modal-body input").val("")
-               $("#modalInsertCar").modal("hide");
-           }else{
-               alert("Failer");
-               $(".modal-body input").val("")
-               $("#modalInsertCar").modal("hide");
-           }
-       }
+        url: endPoint,
+        type: 'PUT',
+        data: formData,
+        success: function (response) {
+            if (response == "true") {
+                getRenterVehicles();
+                $(".modal-body input").val("")
+                $("#modalInsertCar").modal("hide");
+            } else {
+                alert("Failer");
+                $(".modal-body input").val("")
+                $("#modalInsertCar").modal("hide");
+            }
+        }
     });
 }
 
-function updateTruck(){
+function updateTruck() {
     endPoint = window.location + "/truck/update";
     formData = $("#formAddNewTruck").serialize();
     $.ajax({
-        url:endPoint,
-        type:'PUT',
-        data:formData,
-        success:function (response) {
-            if(response == "true") {
-                updateTableView();
+        url: endPoint,
+        type: 'PUT',
+        data: formData,
+        success: function (response) {
+            if (response == "true") {
+                getRenterVehicles();
                 $(".modal-body input").val("")
                 $("#modalInsertTruck").modal("hide");
-            }else{
+            } else {
                 alert("Failer");
                 $(".modal-body input").val("")
                 $("#modalInsertTruck").modal("hide");
@@ -203,26 +245,32 @@ function updateTruck(){
     });
 }
 
-function insertNewTruck(){
+function insertNewTruck(event) {
     endPoint = window.location + "/truck/new";
-    formData = $("#formAddNewTruck").serialize();
-    $.post(endPoint, formData, function (data) {
-        if(data=="true"){
-            $("#insertError").hide();
-            $("#insertSuccess").show();
-            updateTableView();
-        }else{
-            $("#insertError").show();
-            $("#insertSuccess").hide();
+    formData = new FormData(event);
+    $.ajax({
+        url: endPoint,
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response == "true") {
+                $("#insertError").hide();
+                $("#insertSuccess").show();
+                getRenterVehicles();
+            } else {
+                $("#insertError").show();
+                $("#insertSuccess").hide();
+            }
         }
-
     });
     $('#modalInsertTruck').modal('hide');
     $(".modal-body input").val("")
 }
 
 
-/*function getAllRenterVehicles() {
+function getAllRenterVehicles() {
     endPoint = window.location + "/all";
     $.ajax({
         async: false,
@@ -232,10 +280,10 @@ function insertNewTruck(){
             updateTableData(data);
         }
     });
-}*/
+}
 
 function getAllRenterVehiclesOfType(typeSelected) {
-    endPoint = window.location + "/"+typeSelected;
+    endPoint = window.location + "/" + typeSelected;
     $.ajax({
         async: false,
         type: "GET",
@@ -251,7 +299,8 @@ function updateTableData(data) {
     $("#vehicleTable thead>tr").remove();
     $tr = $("<tr class='text-center'>").append(
         $("<th>").text("#"),
-        $("<th >").text("Id"),
+        $("<th>").text("Id"),
+        $("<th>").text("Image"),
         $("<th>").text("Manufacturer"),
         $("<th>").text("Model"),
         $("<th>").text("Year"),
@@ -264,9 +313,16 @@ function updateTableData(data) {
     )
         .appendTo("#vehicleTable thead");
     $.each(data, function (i, item) {
+        img = "/images/car_placeholder.jpg";
+        if(item.image != ""){
+            img = "data:image/png;base64,"+item.image;
+        }
         $tr = $("<tr class='text-center'>").append(
             $("<th>").text(i + 1),
             $("<td id='tableId'>").text(item.id),
+            $("<td id='tableImg'>").html(
+                " <img src='"+img+"' id='carImage' style='width:70px;height: 50px'>"
+            ),
             $("<td id='tableManufacturer'>").text(item.manufacturer),
             $("<td id='tableModel'>").text(item.model),
             $("<td id='tableYear'>").text(item.year),
@@ -275,30 +331,29 @@ function updateTableData(data) {
             $("<td id='tableSubtype'>").text(item.vehicleSubtype),
             $("<td id='tableAvailable'>").text(item.available),
 
-            $("<td id='tablePrice'>").html("<p class='m-0'>"+item.pricePerDay+" &#8364</p>"),
+            $("<td id='tablePrice'>").html("<p class='m-0'>" + item.pricePerDay + " &#8364</p>"),
             $("<td id='btnDeleteVehicle'>").html("<button class='btn btn-danger'><i class='far fa-trash-alt'></i></button>")
         )
             .appendTo("#vehicleTable");
     });
 
-    $("#vehicleTable tbody>tr>td").on("click", function(){
+    $("#vehicleTable tbody>tr>td").on("click", function () {
         //vehicleType = $(this).closest('tr').find('td:eq(4)').text();
         //id = $(this).find("#tableId").text();
         parent = $(this).parent();
-        if($(this).attr('id') === "btnDeleteVehicle"){
+        if ($(this).attr('id') === "btnDeleteVehicle") {
             id = parent.find("#tableId").text();
             deleteVehicle(id);
-        }else{
-            vehicleType = parent.closest('tr').find('td:eq(5)').text();
+        } else {
+            vehicleType = parent.closest('tr').find('td:eq(6)').text();
             id = parent.find("#tableId").text();
-
-            if(vehicleType === "Car"){
+            if (vehicleType === "Car") {
                 getCarData(id);
-            }else if(vehicleType === "Bus"){
+            } else if (vehicleType === "Bus") {
                 getBusData(id);
-            }else if(vehicleType === "Truck"){
+            } else if (vehicleType === "Truck") {
                 getTruckData(id);
-            }else{
+            } else {
                 console.log("Unknown vehicle type");
             }
         }
@@ -306,17 +361,17 @@ function updateTableData(data) {
 }
 
 
-function deleteVehicle(id){
-    endPoint = window.location +"/"+id;
+function deleteVehicle(id) {
+    endPoint = window.location + "/" + id;
     $.ajax({
-        async:false,
-        type:"DELETE",
-        url:endPoint,
-        success:function (response) {
-            if(response == "true"){
-                updateTableView();
+        async: false,
+        type: "DELETE",
+        url: endPoint,
+        success: function (response) {
+            if (response == "true") {
+                getRenterVehicles();
             }
-            else{
+            else {
                 alert("Delete failed");
             }
         }
@@ -324,51 +379,51 @@ function deleteVehicle(id){
 }
 
 function getCarData(id) {
-    endPoint = window.location+/car/+id;
+    endPoint = window.location + /car/ + id;
     $.ajax({
         async: false,
         type: "GET",
         url: endPoint,
         success: function (data) {
             populateModalCar(data);
-            $('#modalInsertCar').modal({backdrop: 'static', keyboard: false},"show");
+            $('#modalInsertCar').modal({backdrop: 'static', keyboard: false}, "show");
         }
     });
 }
 
-function getTruckData(id){
-    endPoint = window.location+"/truck/"+id;
+function getTruckData(id) {
+    endPoint = window.location + "/truck/" + id;
     $.ajax({
-        async:false,
-        type: "GET",
-        url:endPoint,
-        success:function(data){
-            populateModalTruck(data);
-            $("#modalInsertTruck").modal({backdrop: 'static', keyboard: false},"show");
-        }
-    });
-}
-
-function getBusData(id){
-    endPoint = window.location + "/bus/"+id;
-    $.ajax({
-        async:false,
+        async: false,
         type: "GET",
         url: endPoint,
-        success:function (data) {
+        success: function (data) {
+            populateModalTruck(data);
+            $("#modalInsertTruck").modal({backdrop: 'static', keyboard: false}, "show");
+        }
+    });
+}
+
+function getBusData(id) {
+    endPoint = window.location + "/bus/" + id;
+    $.ajax({
+        async: false,
+        type: "GET",
+        url: endPoint,
+        success: function (data) {
             populateModalBus(data);
-            $("#modalInsertBus").modal({backdrop: 'static', keyboard: false},"show");
+            $("#modalInsertBus").modal({backdrop: 'static', keyboard: false}, "show");
         }
     });
 }
 
 
-function populateModalCar(data){
-    if(data != null){
+function populateModalCar(data) {
+    if (data != null) {
         $("#modalInsertCar #btnCarUpdate").show();
         $("#modalInsertCar #btnCarInsert").hide();
         $("#modalInsertCar .modal-body #carId").val(data.id);
-        $("#modalInsertCar .modal-body #carAvailable").val(data.available+""); //Needs to be string
+        $("#modalInsertCar .modal-body #carAvailable").val(data.available + ""); //Needs to be string
         $("#modalInsertCar .modal-body #carSubtype").val(data.vehicleSubtype);
         $("#modalInsertCar .modal-body #carManufacturer").val(data.manufacturer);
         $("#modalInsertCar .modal-body #carModel").val(data.model);
@@ -383,11 +438,19 @@ function populateModalCar(data){
         $("#modalInsertCar .modal-body #carPayloadCapacity").val(data.payloadCapacity);
         $("#modalInsertCar .modal-body #carAdditionalEquipment").val(data.additionalEquipment);
         $("#modalInsertCar .modal-body #carPricePerDay").val(data.pricePerDay);
+        if(data.image == ""){
+            $("#modalInsertCar .modal-body #carImage").attr('src', "/images/car_placeholder.jpg");
+        }else{
+            $("#modalInsertCar .modal-body #carImage").attr('src', "data:image/png;base64," + data.image);
+        }
+
 
         $("#modalInsertCar .modal-body #carNuberOfDoors").val(data.doors);
         $("#modalInsertCar .modal-body #carColor").val(data.color);
         $("#modalInsertCar .modal-body #carTrunkCapacity").val(data.trunkCapacity);
-    }else{
+
+        $(".btn-upload").hide();
+    } else {
         $("#modalInsertCar #btnCarInsert").show();
         $("#modalInsertCar #btnCarUpdate").hide();
         $("#modalInsertCar .modal-body #carId").val(-1);
@@ -406,20 +469,22 @@ function populateModalCar(data){
         $("#modalInsertCar .modal-body #carPayloadCapacity").val(0);
         $("#modalInsertCar .modal-body #carAdditionalEquipment").val("");
         $("#modalInsertCar .modal-body #carPricePerDay").val(0);
+        $("#modalInsertCar .modal-body #carImage").attr('src', "/images/car_placeholder.jpg");
 
         $("#modalInsertCar .modal-body #carNuberOfDoors").val(0);
         $("#modalInsertCar .modal-body #carColor").val("");
         $("#modalInsertCar .modal-body #carTrunkCapacity").val(0);
+        $(".btn-upload").show();
     }
 
 }
 
-function populateModalTruck(data){
-    if(data !=null){
+function populateModalTruck(data) {
+    if (data != null) {
         $("#modalInsertTruck #btnTruckUpdate").show();
         $("#modalInsertTruck #btnTruckInsert").hide();
         $("#modalInsertTruck .modal-body #truckId").val(data.id);
-        $("#modalInsertTruck .modal-body #truckAvailable").val(data.available+""); //Needs to be string
+        $("#modalInsertTruck .modal-body #truckAvailable").val(data.available + ""); //Needs to be string
         $("#modalInsertTruck .modal-body #truckSubtype").val(data.vehicleSubtype);
         $("#modalInsertTruck .modal-body #truckManufacturer").val(data.manufacturer);
         $("#modalInsertTruck .modal-body #truckModel").val(data.model);
@@ -434,19 +499,25 @@ function populateModalTruck(data){
         $("#modalInsertTruck .modal-body #truckPayloadCapacity").val(data.payloadCapacity);
         $("#modalInsertTruck .modal-body #truckAdditionalEquipment").val(data.additionalEquipment);
         $("#modalInsertTruck .modal-body #truckPricePerDay").val(data.pricePerDay);
+        if(data.image == ""){
+            $("#modalInsertTruck .modal-body #truckImage").attr('src', "/images/car_placeholder.jpg");
+        }else{
+            $("#modalInsertTruck .modal-body #truckImage").attr('src', "data:image/png;base64," + data.image);
+        }
 
         $("#modalInsertTruck .modal-body #truckHeight").val(data.truckHeight);
-        $("#modalInsertTruck .modal-body #selectTrailer").val(data.trailer+"");
-        if(data.trailer === true){
+        $("#modalInsertTruck .modal-body #selectTrailer").val(data.trailer + "");
+        if (data.trailer === true) {
             $("#modalInsertTruck .modal-body #trailerInfo").removeClass("d-none");
-        }else{
+        } else {
             $("#modalInsertTruck .modal-body #trailerInfo").addClass("d-none");
         }
         $("#modalInsertTruck .modal-body #trailerLength").val(data.trailerLength);
         $("#modalInsertTruck .modal-body #trailerWidth").val(data.trailerWidth);
         $("#modalInsertTruck .modal-body #trailerHeight").val(data.trailerHeight);
         $("#modalInsertTruck .modal-body #truckFreightSpace").val(data.freightSpace);
-    }else{
+        $(".btn-upload").hide();
+    } else {
         $("#modalInsertTruck #btnTruckInsert").show();
         $("#modalInsertTruck #btnTruckUpdate").hide();
         $("#modalInsertTruck .modal-body #truckId").val(-1);
@@ -466,6 +537,7 @@ function populateModalTruck(data){
         $("#modalInsertTruck .modal-body #truckAdditionalEquipment").val("");
         $("#modalInsertTruck .modal-body #trailerInfo").addClass("d-none");
         $("#modalInsertTruck .modal-body #truckPricePerDay").val(0);
+        $("#modalInsertTruck .modal-body #truckImage").attr('src', "/images/car_placeholder.jpg");
 
         $("#modalInsertTruck .modal-body #truckHeight").val(0.00);
         $("#modalInsertTruck .modal-body #selectTrailer").val("false");
@@ -473,20 +545,21 @@ function populateModalTruck(data){
         $("#modalInsertTruck .modal-body #trailerWidth").val(0.00);
         $("#modalInsertTruck .modal-body #trailerHeight").val(0.00);
         $("#modalInsertTruck .modal-body #truckFreightSpace").val(0);
+        $(".btn-upload").show();
     }
 }
 
-function populateModalBus(data){
+function populateModalBus(data) {
     $("#modalInsertBus #btnBusUpdate").show();
     $("#modalInsertBus #btnBusInsert").hide();
-    if(data != null){
+    if (data != null) {
         $("#modalInsertBus #btnCarUpdate").show();
         $("#modalInsertBus #btnCarInsert").hide();
         $("#modalInsertBus .modal-body #busId").val(data.id);
-        $("#modalInsertBus .modal-body #busAvailable").val(data.available+""); //Needs to be string
+        $("#modalInsertBus .modal-body #busAvailable").val(data.available + ""); //Needs to be string
         $("#modalInsertBus .modal-body #busSubtype").val(data.vehicleSubtype);
         $("#modalInsertBus .modal-body #busManufacturer").val(data.manufacturer);
-        $("#modalInsertBus .modal-body #busManufacturer").val(data.model);
+        $("#modalInsertBus .modal-body #busModel").val(data.model);
         $("#modalInsertBus .modal-body #busYear").val(data.year);
         $("#modalInsertBus .modal-body #busEngine").val(data.engine);
         $("#modalInsertBus .modal-body #busFuelTank").val(data.fuelTank);
@@ -498,11 +571,17 @@ function populateModalBus(data){
         $("#modalInsertBus .modal-body #busPayloadCapacity").val(data.payloadCapacity);
         $("#modalInsertBus .modal-body #busAdditionalEquipment").val(data.additionalEquipment);
         $("#modalInsertBus .modal-body #busPricePerDay").val(data.pricePerDay);
+        if(data.image == ""){
+            $("#modalInsertBus .modal-body #busImage").attr('src', "/images/car_placeholder.jpg");
+        }else{
+            $("#modalInsertBus .modal-body #busImage").attr('src', "data:image/png;base64," + data.image);
+        }
 
         $("#modalInsertBus .modal-body #busSeats").val(data.seats);
-        $("#modalInsertBus .modal-body #busTwoStory").val(data.twoStory+"");
+        $("#modalInsertBus .modal-body #busTwoStory").val(data.twoStory + "");
         $("#modalInsertBus .modal-body #busBunkerCapacity").val(data.bunkerCapacity);
-    }else{
+        $(".btn-upload").hide();
+    } else {
         $("#modalInsertBus #btnBusInsert").show();
         $("#modalInsertBus #btnBusUpdate").hide();
         $("#modalInsertBus .modal-body #busId").val(-1);
@@ -521,9 +600,11 @@ function populateModalBus(data){
         $("#modalInsertBus .modal-body #busPayloadCapacity").val(0);
         $("#modalInsertBus .modal-body #busAdditionalEquipment").val("");
         $("#modalInsertBus .modal-body #busPricePerDay").val(0);
+        $("#modalInsertBus .modal-body #busImage").attr('src', "/images/car_placeholder.jpg");
 
         $("#modalInsertBus .modal-body #busSeats").val(0);
         $("#modalInsertBus .modal-body #busTwoStory").val("false");
         $("#modalInsertBus .modal-body #busBunkerCapacity").val(0);
+        $(".btn-upload").show();
     }
 }

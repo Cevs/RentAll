@@ -6,11 +6,18 @@ import com.cevs.rentall.dto.CarDto;
 import com.cevs.rentall.dto.TruckDto;
 import com.cevs.rentall.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.SQLException;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -25,6 +32,7 @@ public class VehicleService implements  IVehicleService{
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User renter = (User) auth.getPrincipal();
             Car car = new Car(carDto,renter.getId());
+            car.setImage(convertToBase64(carDto.getImage()));
             IVehicleDao.insertCar(car);
             return true;
         } catch (SQLException e) {
@@ -39,6 +47,7 @@ public class VehicleService implements  IVehicleService{
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User renter = (User) auth.getPrincipal();
             Truck truck = new Truck(truckDto, renter.getId());
+            truck.setImage(convertToBase64(truckDto.getImage()));
             IVehicleDao.insertTruck(truck);
             return true;
         }catch (SQLException e){
@@ -67,6 +76,7 @@ public class VehicleService implements  IVehicleService{
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User renter = (User) auth.getPrincipal();
             Bus bus = new Bus(busDto, renter.getId());
+            bus.setImage(convertToBase64(busDto.getImage()));
             IVehicleDao.insertBus(bus);
             return true;
         }catch (SQLException e){
@@ -108,6 +118,7 @@ public class VehicleService implements  IVehicleService{
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User renter = (User) auth.getPrincipal();
             Car car = new Car(carDto, renter.getId());
+            car.setImage(convertToBase64(carDto.getImage()));
             IVehicleDao.updateCar(car);
             return true;
         }catch(SQLException e){
@@ -149,5 +160,17 @@ public class VehicleService implements  IVehicleService{
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User renter = (User) auth.getPrincipal();
         return  IVehicleDao.getBusById(renter.getId(), busId);
+    }
+
+
+    public String convertToBase64(MultipartFile image){
+        try {
+            byte[]  encoded = Base64.getEncoder().encode(image.getBytes());
+            return (new String(encoded));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return  "";
+
     }
 }

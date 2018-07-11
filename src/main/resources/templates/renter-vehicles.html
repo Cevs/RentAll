@@ -6,7 +6,8 @@
     <link rel="stylesheet" type="text/css" href="/css/main.css"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
           integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
+          integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -52,7 +53,8 @@
         </div>
         <div id="vehicleTypeMenu" class="btn-group dropright" style="float:left;">
             <button id="btnShowVehicleType" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">All</button>
+                    aria-haspopup="true" aria-expanded="false">All
+            </button>
             <div class="dropdown-menu">
                 <a class="dropdown-item" id="showAll">All</a>
                 <a class="dropdown-item" id="showBuses">Bus</a>
@@ -64,7 +66,8 @@
             <div class="input-group-prepend">
                 <span class="input-group-text" id="inputGroup-sizing-default">Search</span>
             </div>
-            <input id = "searchInput" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+            <input id="searchInput" type="text" class="form-control" aria-label="Default"
+                   aria-describedby="inputGroup-sizing-default">
         </div>
     </div>
     <br/>
@@ -107,7 +110,9 @@
             <td th:text="${item.vehicleSubtype}" id="tableSubtype"></td>
             <td th:text="${item.available}" id="tableAvailable"></td>
             <td th:text="${item.pricePerDay}" id="tablePrice"></td>
-            <td><button class="btn btn-danger">Delete</button></td>
+            <td>
+                <button class="btn btn-danger">Delete</button>
+            </td>
         </tr>
         </tbody>
     </table>
@@ -171,27 +176,27 @@
                         </div>
                         <div class="form-group">
                             <label>Fuel Consumption (L/100km)</label>
-                            <input id="carFuelConsumption" type="number"  value="0"
+                            <input id="carFuelConsumption" type="number" value="0"
                                    name="fuelConsumption" class="form-control">
                         </div>
                         <div class="form-group">
                             <label>mileage (km)</label>
-                            <input id="carMileage" type="number"  value="0" name="mileage"
+                            <input id="carMileage" type="number" value="0" name="mileage"
                                    class="form-control">
                         </div>
                         <div class="form-group">
                             <label>Spare Tires</label>
-                            <input id="carSpareTires" type="number"  value="0" name="spareTires"
+                            <input id="carSpareTires" type="number" value="0" name="spareTires"
                                    class="form-control">
                         </div>
                         <div class="form-group">
                             <label>Weight (kg)</label>
-                            <input id="carWeight" type="number"  value="0" name="weight"
+                            <input id="carWeight" type="number" value="0" name="weight"
                                    class="form-control">
                         </div>
                         <div class="form-group">
                             <label>Payload Capacity (kg)</label>
-                            <input id="carPayloadCapacity" type="number"  value="0"
+                            <input id="carPayloadCapacity" type="number" value="0"
                                    name="payloadCapacity" class="form-control">
                         </div>
                         <div class="form-group">
@@ -220,6 +225,17 @@
                             <label>Trunk capacity (L)</label>
                             <input id="carTrunkCapacity" type="number" value="0" name="trunkCapacity"
                                    class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Picture</label>
+                            <div class="thumbnail-vehicle">
+                                <div class="view-img-vehicle">
+                                    <img src="/images/car_placeholder.jpg" id="carImage">
+                                </div>
+                                <input type="file" id="uploadCar" name="image">
+                                <button id="btnSelectImageCar" type="button" class="btn btn-dark w-100 btn-upload">Select Image
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -277,7 +293,8 @@
                         </div>
                         <div class="form-group">
                             <label>Registration Plate</label>
-                            <input type="text" name="registrationPlate" class="form-control" id="truckRegistrationPlate">
+                            <input type="text" name="registrationPlate" class="form-control"
+                                   id="truckRegistrationPlate">
                         </div>
                     </div>
 
@@ -288,11 +305,12 @@
                         </div>
                         <div class="form-group">
                             <label>Fuel tank (L)</label>
-                            <input type="number"  value="0" name="fuelTank" class="form-control" id="truckFuelTank">
+                            <input type="number" value="0" name="fuelTank" class="form-control" id="truckFuelTank">
                         </div>
                         <div class="form-group">
                             <label>Fuel Consumption (L/100km)</label>
-                            <input type="number" value="0" name="fuelConsumption" class="form-control" id="truckFuelConsumption">
+                            <input type="number" value="0" name="fuelConsumption" class="form-control"
+                                   id="truckFuelConsumption">
                         </div>
                         <div class="form-group">
                             <label>mileage (km)</label>
@@ -300,19 +318,21 @@
                         </div>
                         <div class="form-group">
                             <label>Spare Tires</label>
-                            <input type="number"  value="0" name="spareTires" class="form-control" id="truckSpareTires">
+                            <input type="number" value="0" name="spareTires" class="form-control" id="truckSpareTires">
                         </div>
                         <div class="form-group">
                             <label>Weight (kg)</label>
-                            <input type="number"  value="0" name="weight" class="form-control" id="truckWeight">
+                            <input type="number" value="0" name="weight" class="form-control" id="truckWeight">
                         </div>
                         <div class="form-group">
                             <label>Payload Capacity (kg)</label>
-                            <input type="number"  value="0" name="payloadCapacity" class="form-control" id="truckPayloadCapacity">
+                            <input type="number" value="0" name="payloadCapacity" class="form-control"
+                                   id="truckPayloadCapacity">
                         </div>
                         <div class="form-group">
                             <label>Additional Equipment</label>
-                            <input type="text" name="additionalEquipment" class="form-control" id="truckAdditionalEquipment">
+                            <input type="text" name="additionalEquipment" class="form-control"
+                                   id="truckAdditionalEquipment">
                         </div>
                     </div>
 
@@ -324,7 +344,7 @@
                         </div>
                         <div class="form-group">
                             <label>Truck height (m)</label>
-                            <input type="number"  value="0.00" step="0.01" name="truckHeight"
+                            <input type="number" value="0.00" step="0.01" name="truckHeight"
                                    class="form-control" id="truckHeight">
                         </div>
                         <div class="form-group">
@@ -337,25 +357,36 @@
                         <div id="trailerInfo" class="d-none">
                             <div class="form-group">
                                 <label>Trailer length (m)</label>
-                                <input type="number"  value="0.00" step="0.01" name="trailerLength"
+                                <input type="number" value="0.00" step="0.01" name="trailerLength"
                                        class="form-control" id="trailerLength">
                             </div>
                             <div class="form-group">
                                 <label>Trailer width (m)</label>
-                                <input type="number"  value="0.00" step="0.01" name="trailerWidth"
+                                <input type="number" value="0.00" step="0.01" name="trailerWidth"
                                        class="form-control" id="trailerWidth">
                             </div>
                             <div class="form-group">
                                 <label>Trailer height (m)</label>
-                                <input type="number"  value="0.00" step="0.01" name="trailerHeight"
+                                <input type="number" value="0.00" step="0.01" name="trailerHeight"
                                        class="form-control" id="trailerHeight">
                             </div>
                             <div class="form-group">
                                 <label>Freight space (kg)</label>
-                                <input type="number" value="0" name="freightSpace" class="form-control" id="truckFreightSpace">
+                                <input type="number" value="0" name="freightSpace" class="form-control"
+                                       id="truckFreightSpace">
                             </div>
                         </div>
-
+                        <div class="form-group">
+                            <label>Picture</label>
+                            <div class="thumbnail-vehicle">
+                                <div class="view-img-vehicle">
+                                    <img src="/images/car_placeholder.jpg" id="truckImage">
+                                </div>
+                                <input type="file" id="uploadTruck" name="image">
+                                <button id="btnSelectImageTruck" type="button" class="btn btn-dark w-100 btn-upload">Select Image
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -425,7 +456,7 @@
                         </div>
                         <div class="form-group">
                             <label>Fuel tank (L)</label>
-                            <input type="number"  value="0" name="fuelTank" class="form-control" id="busFuelTank">
+                            <input type="number" value="0" name="fuelTank" class="form-control" id="busFuelTank">
                         </div>
                         <div class="form-group">
                             <label>Fuel Consumption (L/100km)</label>
@@ -434,24 +465,25 @@
                         </div>
                         <div class="form-group">
                             <label>mileage (km)</label>
-                            <input type="number"  value="0" name="mileage" class="form-control" id="busMileage">
+                            <input type="number" value="0" name="mileage" class="form-control" id="busMileage">
                         </div>
                         <div class="form-group">
                             <label>Spare Tires</label>
-                            <input type="number"  value="0" name="spareTires" class="form-control" id="busSpareTires">
+                            <input type="number" value="0" name="spareTires" class="form-control" id="busSpareTires">
                         </div>
                         <div class="form-group">
                             <label>Weight (kg)</label>
-                            <input type="number"  value="0" name="weight" class="form-control" id="busWeight">
+                            <input type="number" value="0" name="weight" class="form-control" id="busWeight">
                         </div>
                         <div class="form-group">
                             <label>Payload Capacity (kg)</label>
-                            <input type="number"  value="0" name="payloadCapacity" class="form-control"
+                            <input type="number" value="0" name="payloadCapacity" class="form-control"
                                    id="busPayloadCapacity">
                         </div>
                         <div class="form-group">
                             <label>Additional Equipment</label>
-                            <input type="text" name="additionalEquipment" class="form-control" id="busAdditionalEquipment">
+                            <input type="text" name="additionalEquipment" class="form-control"
+                                   id="busAdditionalEquipment">
                         </div>
                     </div>
 
@@ -470,12 +502,23 @@
                         </div>
                         <div class="form-group">
                             <label>Seats</label>
-                            <input type="number"  value="0" name="seats" class="form-control" id="busSeats">
+                            <input type="number" value="0" name="seats" class="form-control" id="busSeats">
                         </div>
                         <div class="form-group">
                             <label>Bunker capacity (L)</label>
                             <input type="number" value="0" name="bunkerCapacity" class="form-control"
                                    id="busBunkerCapacity">
+                        </div>
+                        <div class="form-group">
+                            <label>Picture</label>
+                            <div class="thumbnail-vehicle">
+                                <div class="view-img-vehicle">
+                                    <img src="/images/car_placeholder.jpg" id="busImage">
+                                </div>
+                                <input type="file" id="uploadBus" name="image">
+                                <button id="btnSelectImageBus" type="button" class="btn btn-dark w-100 btn-upload">Select Image
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

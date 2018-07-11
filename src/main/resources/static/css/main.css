@@ -118,8 +118,33 @@ body{
     height:350px;
     display:block;
 }
+
+.thumbnail-vehicle{
+    width:100%;
+
+    overflow: hidden;;
+}
+
+.view-img-vehicle img{
+    width:100%;
+    height:50%;
+    display:block;
+}
+
 #upload {
     display: none;
+}
+
+#uploadCar{
+    display:none;
+}
+
+#uploadTruck{
+    display:none;
+}
+
+#uploadBus{
+    display:none;
 }
 
 .profile-table tr{

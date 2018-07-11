@@ -1,5 +1,7 @@
 package com.cevs.rentall.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -42,6 +44,8 @@ public class VehicleDto {
     private boolean available;
     @NotNull
     private int pricePerDay;
+
+    private MultipartFile image;
 
     public String getManufacturer() {
         return manufacturer;
@@ -169,5 +173,13 @@ public class VehicleDto {
 
     public void setPricePerDay(int pricePerDay) {
         this.pricePerDay = pricePerDay;
+    }
+
+    public MultipartFile getImage() {
+        return image;
+    }
+
+    public void setImage(MultipartFile image) {
+        this.image = image;
     }
 }

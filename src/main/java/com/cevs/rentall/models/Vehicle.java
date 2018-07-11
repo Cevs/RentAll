@@ -1,6 +1,10 @@
 package com.cevs.rentall.models;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.sql.Date;
+import java.util.Base64;
 
 public class Vehicle {
     private int id;
@@ -20,6 +24,7 @@ public class Vehicle {
     private String vehicleSubtype;
     private boolean available;
     private int pricePerDay;
+    private String image;
     private int renterId;
 
     public Vehicle() {
@@ -193,4 +198,13 @@ public class Vehicle {
     public void setRenterId(int renterId) {
         this.renterId = renterId;
     }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
 }
