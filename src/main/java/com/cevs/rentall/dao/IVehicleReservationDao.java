@@ -1,6 +1,7 @@
 package com.cevs.rentall.dao;
 
 import com.cevs.rentall.models.VehicleReservation;
+import com.cevs.rentall.models.VehicleReservationRenter;
 
 import java.sql.Date;
 import java.sql.SQLException;
@@ -14,4 +15,5 @@ public interface IVehicleReservationDao {
     void deleteReservation(int renterId, int reservationId) throws SQLException;
     void updateReservationStatus(int reservationId, String status) throws SQLException;
     void reserveVehicle(int vehicleId, Date beginningDate, Date endDate, int buyerId) throws SQLException;
+    List<VehicleReservationRenter> getAllBuyerReservations(int buyerId, String search, String table, String status);
 }

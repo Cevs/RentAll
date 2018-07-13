@@ -1,10 +1,12 @@
 package com.cevs.rentall.services;
 
 import com.cevs.rentall.models.VehicleReservation;
+import com.cevs.rentall.models.VehicleReservationRenter;
 
 import java.util.List;
 
 public interface IVehicleReservations {
+    List<VehicleReservationRenter> getAllBuyerReservations(String search, String type, String status);
     List<VehicleReservation> getAllReservations(String search);
     List<VehicleReservation> getAllReservationsWithStatus(String status, String search);
     List<VehicleReservation> getAllReservationsForVehicleType(String vehicleType, String search);

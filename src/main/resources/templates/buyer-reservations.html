@@ -2,14 +2,11 @@
 <html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Search vehicles</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Reservations</title>
     <link rel="stylesheet" type="text/css" href="/css/main.css"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
           integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
-<body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
             aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,13 +18,13 @@
             <li class="nav-item">
                 <a class="nav-link" href="/index">Home</a>
             </li>
-            <li sec:authorize="hasAuthority('Buyer')" class="nav-item active">
+            <li sec:authorize="hasAuthority('Buyer')" class="nav-item">
                 <a class="nav-link" href="/buyer/search/vehicles">Offers</a>
             </li>
-            <li sec:authorize="hasAuthority('Buyer')" class="nav-item">
+            <li sec:authorize="hasAuthority('Buyer')" class="nav-item active">
                 <a class="nav-link" href="/buyer/reservation">Reservations</a>
             </li>
-            <li  sec:authorize="hasAuthority('Buyer')"class="nav-item">
+            <li sec:authorize="hasAuthority('Buyer')" class="nav-item">
                 <a class="nav-link" href="/buyer/profile">Profile</a>
             </li>
         </ul>
@@ -37,6 +34,8 @@
         </form>
     </div>
 </nav>
+
+
 <div class="container">
     <h1 style="margin-top:40px; margin-bottom:40px;" class="text-center">Vehicle Offers</h1>
     <div class="input-group mb-3 w-50 mx-auto">
@@ -55,6 +54,18 @@
                 <a class="dropdown-item" id="showBuses">Bus</a>
                 <a class="dropdown-item" id="showCars">Car</a>
                 <a class="dropdown-item" id="showTrucks">Truck</a>
+            </div>
+        </div>
+        <div id="reservationStatusMenu" class="dropdown" style="float:left;">
+            <button class="btn btn-success dropdown-toggle" type="button" id="reservationStatusMenuButton" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                All
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" id="reservationAll">All</a>
+                <a class="dropdown-item" id="reservationPending">Pending</a>
+                <a class="dropdown-item" id="reservationApproved">Approved</a>
+                <a class="dropdown-item" id="reservationDeclined">Declined</a>
             </div>
         </div>
     </div>
@@ -464,40 +475,6 @@
     </div>
 </div>
 
-<form id="fromReserve" enctype="utf8">
-    <div class="modal fade" id="modalReserve" tabindex="-1" role="dialog"
-         aria-labelledby="modalReserveCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalReserveInsertLongTitle"><strong>Reserve a vehicle</strong></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body text-center mx-auto">
-                    <input id="vehicleId" class="d-none"/>
-                    <div class="form-group">
-                        <h4 id="reserveFormInfo"></h4>
-                    </div>
-                    <div class="form-group">
-                        <label>Begining date</label>
-                        <input type="text" id="dateFrom" class="form-control"/>
-                    </div>
-                    <div class="form-group">
-                        <label>End date</label>
-                        <input type="text" id="dateTo" class="form-control"/>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                    <button id="btnReserve" type="submit" class="btn btn-primary">Reserve</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
-
 <!-- Modal Company Info -->
 <div class="modal fade" id="modalCompanyInfo" tabindex="-1" role="dialog"
      aria-labelledby="modalCompanyInfoCenterTitle" aria-hidden="true">
@@ -567,14 +544,17 @@
     </div>
 </div>
 
+
+
+
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
         integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
         crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
         integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
         crossorigin="anonymous"></script>
-<script src="/js/buyerSearchVehicles.js"></script>
+<script src="/js/buyerVehicleReservations.js"></script>
 </body>
 </html>

@@ -12,7 +12,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/renter/reservation")
-public class VehicleReservationRestController {
+public class RenterVehicleReservationRestController {
 
     @Autowired
     IVehicleReservations vhService;

@@ -3,6 +3,7 @@ package com.cevs.rentall.services;
 import com.cevs.rentall.dao.IVehicleReservationDao;
 import com.cevs.rentall.models.User;
 import com.cevs.rentall.models.VehicleReservation;
+import com.cevs.rentall.models.VehicleReservationRenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,10 +16,27 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
-public class VehicleReservationImpl implements IVehicleReservations{
+public class VehicleReservationImpl implements IVehicleReservations {
     @Autowired
     IVehicleReservationDao vehicleReservationDao;
 
+
+    @Override
+    public List<VehicleReservationRenter> getAllBuyerReservations(String search, String type, String status) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User buyer = (User) auth.getPrincipal();
+        String table = "";
+        if (type.equals("Car")) {
+            table = "cars";
+        } else if (type.equals("Bus")) {
+            table = "buses";
+        } else if (type.equals("Truck")) {
+            table = "trucks";
+        } else {
+            table = "vehicles";
+        }
+        return vehicleReservationDao.getAllBuyerReservations(buyer.getId(), search, table, status);
+    }
 
     @Override
     public List<VehicleReservation> getAllReservations(String search) {
@@ -50,12 +68,12 @@ public class VehicleReservationImpl implements IVehicleReservations{
 
     @Override
     public boolean deleteReservation(int reservationId) {
-        try{
+        try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User renter = (User) auth.getPrincipal();
             vehicleReservationDao.deleteReservation(renter.getId(), reservationId);
             return true;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
@@ -64,10 +82,10 @@ public class VehicleReservationImpl implements IVehicleReservations{
 
     @Override
     public boolean updateReservationStatus(int reservationId, String status) {
-        try{
+        try {
             vehicleReservationDao.updateReservationStatus(reservationId, status);
             return true;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
@@ -75,25 +93,25 @@ public class VehicleReservationImpl implements IVehicleReservations{
 
     @Override
     public boolean reserveVehicle(int vehicleId, String dateFrom, String dateTo) {
-        try{
+        try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User buyer = (User) auth.getPrincipal();
             Date startDate = convertToSqlDate(dateFrom);
             Date endDate = convertToSqlDate(dateTo);
             vehicleReservationDao.reserveVehicle(vehicleId, startDate, endDate, buyer.getId());
             return true;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
 
-    public Date convertToSqlDate(String sDate){
+    public Date convertToSqlDate(String sDate) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("mm/dd/yyyy");
             java.util.Date parsed = sdf.parse(sDate);
             Date sqlDate = new Date(parsed.getTime());
-            return  sqlDate;
+            return sqlDate;
         } catch (ParseException e) {
             e.printStackTrace();
         }
