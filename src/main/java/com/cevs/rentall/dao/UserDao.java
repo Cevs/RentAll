@@ -2,6 +2,7 @@ package com.cevs.rentall.dao;
 
 import com.cevs.rentall.database.Database;
 import com.cevs.rentall.models.*;
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 @Service
 public class UserDao implements IUserDao {
@@ -78,7 +81,7 @@ public class UserDao implements IUserDao {
     public User findUserByEmail(String userEmail) {
         String sql = "SELECT id, email, password, user_type, " +
                 "(location).country, (location).city, " +
-                "(location).address, (location).zip_code " +
+                "(location).address, (location).zip_code, locked " +
                 "FROM users WHERE email = ?";
 
         try(Connection conn = db.openConnection();
@@ -97,6 +100,7 @@ public class UserDao implements IUserDao {
                 String zipCode = rs.getString("zip_code");
                 Location location = new Location(country,city,address,zipCode);
                 User user = new User(id,email,password,userType,location);
+                user.setLocked(rs.getBoolean("locked"));
                 return user;
             }
         } catch (SQLException e) {
@@ -120,20 +124,14 @@ public class UserDao implements IUserDao {
                 ps.setString(4,renter.getLocation().getCity());
                 ps.setString(5,renter.getLocation().getAddress());
                 ps.setString(6,renter.getLocation().getZipCode());
-                File imageTemp = File.createTempFile("image",".png");
-                renter.getImage().transferTo(imageTemp);
-                FileInputStream fis = new FileInputStream(imageTemp);
-                ps.setBinaryStream(7, fis, imageTemp.length());
+                ps.setString(7, renter.getImage());
                 ps.setString(8,renter.getCompanyName());
                 ps.setString(9, renter.getCompanyPhoneNumber());
                 ps.setString(10,renter.getBankAccount());
                 ps.setInt(11, renter.getId());
                 ps.executeUpdate();
-                fis.close();
             } catch (SQLException e) {
                 throw new SQLException("Update failed");
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }else{
             String sql = "UPDATE renters SET email = ?, password = ?, location.country = ?, " +
@@ -174,21 +172,15 @@ public class UserDao implements IUserDao {
                 ps.setString(4,buyer.getLocation().getCity());
                 ps.setString(5,buyer.getLocation().getAddress());
                 ps.setString(6,buyer.getLocation().getZipCode());
-                File imageTemp = File.createTempFile("image",".png");
-                buyer.getImage().transferTo(imageTemp);
-                FileInputStream fis = new FileInputStream(imageTemp);
-                ps.setBinaryStream(7, fis, imageTemp.length());
+                ps.setString(7, buyer.getImage());
                 ps.setString(8,buyer.getFirstname());
                 ps.setString(9, buyer.getLastname());
                 ps.setString(10,buyer.getPhoneNumber());
                 ps.setDate(11,buyer.getBirthDate());
                 ps.setInt(12, buyer.getId());
                 ps.executeUpdate();
-                fis.close();
             } catch (SQLException e) {
                 throw new SQLException("Update failed");
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }else{
             String sql = "UPDATE buyers SET email = ?, password = ?, location.country = ?, " +
@@ -236,8 +228,7 @@ public class UserDao implements IUserDao {
                 loc.setAddress(rs.getString("address"));
                 loc.setZipCode(rs.getString("zip_code"));
                 renter.setLocation(loc);
-                byte[] imgBytes = rs.getBytes("image");
-                renter.setImage(convertToMultipart(imgBytes));
+                renter.setImage(rs.getString("image"));
                 renter.setCompanyName(rs.getString("company_name"));
                 renter.setCompanyPhoneNumber(rs.getString("company_phone_number"));
                 renter.setBankAccount(rs.getString("bank_account"));
@@ -268,8 +259,7 @@ public class UserDao implements IUserDao {
                 loc.setAddress(rs.getString("address"));
                 loc.setZipCode(rs.getString("zip_code"));
                 buyer.setLocation(loc);
-                byte[] imgBytes = rs.getBytes("image");
-                buyer.setImage(convertToMultipart(imgBytes));
+                buyer.setImage(rs.getString("image"));
                 buyer.setFirstname(rs.getString("firstname"));
                 buyer.setLastname(rs.getString("lastname"));
                 buyer.setPhoneNumber(rs.getString("phone_number"));
@@ -300,8 +290,7 @@ public class UserDao implements IUserDao {
                 loc.setAddress(rs.getString("address"));
                 loc.setZipCode(rs.getString("zip_code"));
                 ri.setLocation(loc);
-                byte[] imgBytes = rs.getBytes("image");
-                ri.setImage(convertToBase64(convertToMultipart(imgBytes)));
+                ri.setImage(rs.getString("image"));
                 ri.setCompanyName(rs.getString("company_name"));
                 ri.setCompanyPhoneNumber(rs.getString("company_phone_number"));
                 ri.setBankAccount(rs.getString("bank_account"));
@@ -312,28 +301,67 @@ public class UserDao implements IUserDao {
         return ri;
     }
 
-    private MultipartFile convertToMultipart(byte[] imgBytes) {
-        try {
-            Path path = Files.createTempFile("image",".png");
-            Files.write(path, imgBytes);
-            MultipartFile multipartFile = new MockMultipartFile("image.png",
-                    new FileInputStream(path.toFile()));
-            path.toFile().deleteOnExit();
-            return multipartFile;
-        } catch (Exception e) {
+    @Override
+    public List<User> getUsers(String search, String table) {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT id, email, password, user_type, (location).country, (location).city, " +
+                "(location).address, (location).zip_code, image, locked FROM "+table+" " +
+                "WHERE user_type != 'Administrator' " +
+                "AND (email LIKE ? OR password LIKE ? OR (location).country LIKE ? " +
+                "OR (location).city LIKE ? OR (location).address LIKE ? OR (location).zip_code LIKE ?);";
+        try(Connection conn = db.openConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            for(int i = 1; i<= 6 ;i++){
+                ps.setString(i, search+"%");
+            }
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                User u = new User();
+                u.setId(rs.getInt("id"));
+                u.setEmail(rs.getString("email"));
+                u.setPassword(rs.getString("password"));
+                u.setUserType(rs.getString("user_type"));
+                u.setLocation(
+                        new Location(
+                                rs.getString("country"),
+                                rs.getString("city"),
+                                rs.getString("address"),
+                                rs.getString("zip_code")
+                        )
+                );
+                u.setImage(rs.getString("image"));
+                u.setLocked(rs.getBoolean("locked"));
+                users.add(u);
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return  null;
+        return users;
     }
 
-    public String convertToBase64(MultipartFile image) {
-        try {
-            byte[] encoded = Base64.getEncoder().encode(image.getBytes());
-            return (new String(encoded));
-        } catch (Exception e) {
-            e.printStackTrace();
+    @Override
+    public void deleteUser(int userId) throws SQLException {
+        String sql = "DELETE FROM users WHERE id = ?";
+        try(Connection conn = db.openConnection();
+        PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setInt(1,userId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Delete failed");
         }
-        return "";
+    }
 
+    @Override
+    public void lockUser(int id, boolean locked) throws SQLException {
+        String sql = "UPDATE users SET locked = ? " +
+                "WHERE id = ?";
+        try(Connection conn = db.openConnection();
+        PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setBoolean(1, locked);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Update failed");
+        }
     }
 }

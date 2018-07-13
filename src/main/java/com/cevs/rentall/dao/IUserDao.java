@@ -19,4 +19,7 @@ public interface IUserDao {
     Renter getRenterProfileInfo(int renterId);
     Buyer getBuyerProfileInfo(int buyerId);
     RenterInfo getRenterInfo(int renterId);
+    List<User> getUsers(String search, String table);
+    void deleteUser(int userId) throws SQLException;
+    void lockUser(int id, boolean locked) throws SQLException;
 }

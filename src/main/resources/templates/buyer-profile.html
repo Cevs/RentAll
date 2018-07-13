@@ -103,7 +103,7 @@
                 <div class="col-lg-4">
                     <div class="thumbnail">
                         <div th:if="${buyer.image != null}" class="view-img">
-                            <img  th:src="@{'data:image/jpeg;base64,'+${buyer.encodeImage()}}">
+                            <img  th:src="@{'data:image/jpeg;base64,'+${buyer.image}}">
                         </div>
                         <div th:if="${buyer.image == null}" class="view-img">
                             <img  src="/images/profile.png">

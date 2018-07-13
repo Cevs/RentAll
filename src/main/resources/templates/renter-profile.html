@@ -97,7 +97,7 @@
                 <div class="col-lg-4">
                     <div class="thumbnail">
                         <div th:if="${renter.image != null}" class="view-img">
-                            <img  th:src="@{'data:image/jpeg;base64,'+${renter.encodeImage()}}">
+                            <img  th:src="@{'data:image/jpeg;base64,'+${renter.image}}">
                         </div>
                         <div th:if="${renter.image == null}" class="view-img">
                             <img  src="/images/profile.png">

@@ -13,7 +13,9 @@ public class User implements Serializable {
     private String password;
     private String userType;
     private Location location;
-    private MultipartFile image;
+    private String image;
+    private boolean locked;
+
     public User() {
     }
 
@@ -76,33 +78,19 @@ public class User implements Serializable {
         this.location = location;
     }
 
-    public MultipartFile getImage() {
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public String getImage() {
         return image;
     }
 
-    public void setImage(MultipartFile image) {
+    public void setImage(String image) {
         this.image = image;
-    }
-
-    public String encodeImage(){
-        try {
-            byte[]  encoded = Base64.getEncoder().encode(getImage().getBytes());
-            return (new String(encoded));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return  "";
-
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", userType='" + userType + '\'' +
-                ", location=" + location +
-                '}';
     }
 }
