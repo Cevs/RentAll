@@ -252,7 +252,7 @@ function getAllOffers() {
                 }
                 var $card = $(
                     "<div id ='" + item.id + "' class=\"card\">\n" +
-                    "            <img class=\"card-img-top\" src='" + srcImg + "' style='height: 150px;' alt=\"Card image cap\">\n" +
+                    "            <img class=\"card-img-top\" src='" + srcImg + "' style='height: 180px;' alt=\"Card image cap\">\n" +
                     "            <div class=\"card-body\">\n" +
                     "                <h5 class=\"card-title\">" + item.manufacturer + "\n" + item.model + "</h5>\n" +
                     "                <p class=\"card-text vehicle-type\"><strong>Type: </strong>" + item.vehicleType + "</p>" +

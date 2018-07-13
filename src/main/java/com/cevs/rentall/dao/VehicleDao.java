@@ -101,7 +101,8 @@ public class VehicleDao implements IVehicleDao {
                 "FROM "+table+" t "+
                 "LEFT JOIN renters r ON t.renter_id = r.id "+
                 "WHERE t.available = ? " +
-                "AND (manufacturer LIKE ? OR model LIKE ? OR engine LIKE ?)";
+                "AND (manufacturer LIKE ? OR model LIKE ? OR engine LIKE ?) " +
+                "ORDER BY t.manufacturer, t.model ASC";
         try(Connection conn = db.openConnection();
             PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setBoolean(1,true);
