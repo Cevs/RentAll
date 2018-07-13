@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml" style="height: 100% !important;">
 <head>
     <meta charset="UTF-8">
     <title>Index</title>
@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
           integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
 </head>
-<body>
+<body  style="height: 100% !important;">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
             aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,10 +49,15 @@
     </div>
 </nav>
 <div class="container">
-    <h1>
-        Index
-    </h1>
-    Roles: <span sec:authentication="principal.userType">[ROLE_USER, ROLE_ADMIN]</span>
+    <div class="row h-100">
+        <div class="col-9 my-auto mx-auto">
+            <p class="text-center" style="font-size:50px; font-weight: bold;">
+                Welcome
+            </p>
+            <p class="text-center" style="font-size:25px; margin-left:150px;"><span sec:authentication="principal.email"></span></p>
+        </div>
+    </div>
+    <!--Roles: <span sec:authentication="principal.userType">[ROLE_USER, ROLE_ADMIN]</span>-->
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
