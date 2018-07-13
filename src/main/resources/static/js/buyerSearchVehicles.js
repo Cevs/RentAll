@@ -14,32 +14,6 @@ $(document).ready(function () {
         getAllOffers();
     });
 
-    $(".card-deck a").on("click", function (event) {
-        event.preventDefault();
-        body = $(this).parent();
-        card = $(body).parent();
-        companyId = card.find(".company-id").text();
-        getCompanyInfo(companyId);
-    });
-
-    $(".card-deck button").on("click", function () {
-        footer = $(this).parent();
-        card = $(footer).parent();
-
-        id = card.attr('id')
-        vehicleType = card.find(".vehicle-type").text();
-        value = $(this).text();
-        title = card.find(".card-title").text();
-
-        if (value == "Detail") {
-            getVehicleData(id, vehicleType);
-        } else {
-            $("#modalReserve #vehicleId").val(id);
-            $("#reserveFormInfo").text(title);
-            $("#modalReserve").modal({backdrop: 'static', keyboard: false}, "show");
-        }
-    });
-
     $("#fromReserve").submit(function (event) {
        event.preventDefault();
        reserveVehicle();
@@ -272,6 +246,33 @@ function getAllOffers() {
 
                 $("#card-deck-" + id).append($card);
             });
+
+            $(".card-deck a").on("click", function (event) {
+                event.preventDefault();
+                body = $(this).parent();
+                card = $(body).parent();
+                companyId = card.find(".company-id").text();
+                getCompanyInfo(companyId);
+            });
+
+            $(".card-deck button").on("click", function () {
+                footer = $(this).parent();
+                card = $(footer).parent();
+
+                id = card.attr('id')
+                vehicleType = card.find(".vehicle-type").text();
+                value = $(this).text();
+                title = card.find(".card-title").text();
+
+                if (value == "Detail") {
+                    getVehicleData(id, vehicleType);
+                } else {
+                    $("#modalReserve #vehicleId").val(id);
+                    $("#reserveFormInfo").text(title);
+                    $("#modalReserve").modal({backdrop: 'static', keyboard: false}, "show");
+                }
+            });
+
         }
     });
 }

@@ -123,8 +123,7 @@ function updateTableData(data) {
                 $("<td id='tableStatus'>").text(item.status),
                 $("<td id='tableReservationAction'>").html(
                     "<button id = 'btnApprove' class='btn btn-success btn-reservation'><i class='fas fa-check'></i></button>" +
-                    "<button id = 'btnDecline' class='btn btn-warning btn-reservation'><i class='fas fa-ban'></i></button>" +
-                    "<button id = 'btnDelete' class='btn btn-danger btn-reservation'><i class='far fa-trash-alt'></i></button>"
+                    "<button id = 'btnDecline' class='btn btn-warning btn-reservation'><i class='fas fa-ban'></i></button>"
                 )
             )
                 .appendTo("#reservationTable");
