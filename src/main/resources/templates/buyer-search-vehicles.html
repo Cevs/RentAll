@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Search vehicles</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
+            aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+        <a class="navbar-brand" href="">RentAll</a>
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Index <span class="sr-only">(current)</span></a>
+            </li>
+            <li sec:authorize="hasAuthority('Buyer')" class="nav-item">
+                <a class="nav-link" href="#">Vehicles</a>
+            </li>
+            <li sec:authorize="hasAuthority('Buyer')" class="nav-item">
+                <a class="nav-link" href="#">Reservations</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="post">
+            <p class="m-0 navbar-user"><span sec:authentication="principal.email"></span></p>
+            <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Logout</button>
+        </form>
+    </div>
+</nav>
+<div class="container">
+    <h1 style="margin-top:40px; margin-bottom:40px;" class="text-center">Vehicle Offers</h1>
+    <div class="input-group mb-3 w-50 mx-auto">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default">Search</span>
+        </div>
+        <input id="searchInput" type="text" class="form-control" aria-label="Default"
+               aria-describedby="inputGroup-sizing-default">
+        <div id="vehicleTypeMenu" class="dropdown" style="float:left;">
+            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                All
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" id="showAll">All</a>
+                <a class="dropdown-item" id="showBuses">Bus</a>
+                <a class="dropdown-item" id="showCars">Car</a>
+                <a class="dropdown-item" id="showTrucks">Truck</a>
+            </div>
+        </div>
+    </div>
+    <div id="card-deck-container"></div>
+</div>
+
+
+<!-- Modal Car -->
+<div class="modal fade" id="modalInsertCar" tabindex="-1" role="dialog"
+     aria-labelledby="modalInsertCarInsertCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalInsertCarInsertLongTitle"><strong>Car</strong></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body row">
+                <input type="number" value="-1" id="carId" name="id" class="d-none" readonly="readonly">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Type of Car</label>
+                        <select class="custom-select" name="vehicleSubtype" id="carSubtype" disabled="disabled">
+                            <option value="Caravan">Caravan</option>
+                            <option value="Limousine">Limousine</option>
+                            <option value="Delivery">Delivery</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Available</label>
+                        <select class="custom-select" name="available" id="carAvailable" disabled="disabled">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Manufacturer</label>
+                        <input type="text" id="carManufacturer" name="manufacturer" class="form-control"
+                               readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Model</label>
+                        <input type="text" id="carModel" name="model" class="form-control" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>year (yyyy)</label>
+                        <input id="carYear" type="number" name="year" class="form-control" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Registration Plate</label>
+                        <input id="carRegistrationPlate" type="text" name="registrationPlate" class="form-control"
+                               readonly="readonly">
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Engine</label>
+                        <input id="carEngine" type="text" name="engine" class="form-control" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Fuel tank (L)</label>
+                        <input id="carFuelTank" type="number" value="0" name="fuelTank"
+                               class="form-control" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Fuel Consumption (L/100km)</label>
+                        <input id="carFuelConsumption" type="number" value="0"
+                               name="fuelConsumption" class="form-control" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>mileage (km)</label>
+                        <input id="carMileage" type="number" value="0" name="mileage"
+                               class="form-control" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Spare Tires</label>
+                        <input id="carSpareTires" type="number" value="0" name="spareTires"
+                               class="form-control" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Weight (kg)</label>
+                        <input id="carWeight" type="number" value="0" name="weight"
+                               class="form-control" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Payload Capacity (kg)</label>
+                        <input id="carPayloadCapacity" type="number" value="0"
+                               name="payloadCapacity" class="form-control" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Additional Equipment</label>
+                        <input id="carAdditionalEquipment" type="text" name="additionalEquipment"
+                               class="form-control" readonly="readonly">
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Price per day (&#8364/day)</label>
+                        <input id="carPricePerDay" type="number" value="0" name="pricePerDay"
+                               class="form-control" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Number of doors</label>
+                        <input id="carNuberOfDoors" type="number" value="0" name="doors"
+                               class="form-control" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Color</label>
+                        <input id="carColor" type="text" name="color" class="form-control" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Trunk capacity (L)</label>
+                        <input id="carTrunkCapacity" type="number" value="0" name="trunkCapacity"
+                               class="form-control" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Picture</label>
+                        <div class="thumbnail-vehicle">
+                            <div class="view-img-vehicle">
+                                <img src="/images/car_placeholder.jpg" id="carImage">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal  Bus -->
+<div class="modal fade" id="modalInsertBus" tabindex="-1" role="dialog"
+     aria-labelledby="modalInsertTruckInsertCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalInsertBusInsertLongTitle"><strong>Bus</strong></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body row">
+                <div class="col-lg-4">
+                    <input type="number" value="-1" readonly="readonly" id="busId" name="id" class="d-none">
+                    <div class="form-group">
+                        <label>Type of Bus</label>
+                        <select class="custom-select" name="vehicleSubtype" id="busSubtype" disabled="disabled">
+                            <option value="Band Bus">Band Bus</option>
+                            <option value="Minibus">Minibus</option>
+                            <option value="Party Bus">Party Bus</option>
+                            <option value="School Bus">School Bus</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Available</label>
+                        <select class="custom-select" name="available" id="busAvailable" disabled="disabled">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Manufacturer</label>
+                        <input type="text" name="manufacturer" class="form-control" id="busManufacturer"
+                               readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Model</label>
+                        <input type="text" id="busModel" name="model" class="form-control" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>year (yyyy)</label>
+                        <input type="number" name="year" class="form-control" id="busYear" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Registration Plate</label>
+                        <input type="text" name="registrationPlate" class="form-control"
+                               id="busRegistrationPlate" readonly="readonly">
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Engine</label>
+                        <input type="text" name="engine" class="form-control" id="busEngine" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Fuel tank (L)</label>
+                        <input type="number" value="0" name="fuelTank" class="form-control" id="busFuelTank"
+                               readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Fuel Consumption (L/100km)</label>
+                        <input type="number" value="0" name="fuelConsumption" class="form-control"
+                               id="busFuelConsumption" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>mileage (km)</label>
+                        <input type="number" value="0" name="mileage" class="form-control" id="busMileage"
+                               readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Spare Tires</label>
+                        <input type="number" value="0" name="spareTires" class="form-control" id="busSpareTires"
+                               readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Weight (kg)</label>
+                        <input type="number" value="0" name="weight" class="form-control" id="busWeight"
+                               readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Payload Capacity (kg)</label>
+                        <input type="number" value="0" name="payloadCapacity" class="form-control"
+                               id="busPayloadCapacity" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Additional Equipment</label>
+                        <input type="text" name="additionalEquipment" class="form-control"
+                               id="busAdditionalEquipment" readonly="readonly">
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Price per day (&#8364/day)</label>
+                        <input id="busPricePerDay" type="number" value="0" name="pricePerDay"
+                               class="form-control" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Two Story</label>
+                        <select class="custom-select" name="twoStory" id="busTwoStory" disabled="disabled">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Seats</label>
+                        <input type="number" value="0" name="seats" class="form-control" id="busSeats" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Bunker capacity (L)</label>
+                        <input type="number" value="0" name="bunkerCapacity" class="form-control"
+                               id="busBunkerCapacity" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Picture</label>
+                        <div class="thumbnail-vehicle">
+                            <div class="view-img-vehicle">
+                                <img src="/images/car_placeholder.jpg" id="busImage">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Truck -->
+
+<div class="modal fade" id="modalInsertTruck" tabindex="-1" role="dialog"
+     aria-labelledby="modalInsertTruckInsertCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalInsertTruckInsertLongTitle"><strong>Truck</strong></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body row">
+                <div class="col-lg-4">
+                    <input type="number" value="-1" readonly="readonly" id="truckId" name="id" class="d-none">
+                    <div class="form-group">
+                        <label>Type of Truck</label>
+                        <select class="custom-select" name="vehicleSubtype" id="truckSubtype" disabled="disabled">
+                            <option value="Delivery">Delivery</option>
+                            <option value="Freight">Freight</option>
+                            <option value="Pickup">Pickup</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Available</label>
+                        <select class="custom-select" name="available" id="truckAvailable" disabled="disabled">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Manufacturer</label>
+                        <input type="text" name="manufacturer" class="form-control" id="truckManufacturer" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Model</label>
+                        <input type="text" id="truckModel" name="model" class="form-control" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>year (yyyy)</label>
+                        <input type="number" name="year" class="form-control" id="truckYear" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Registration Plate</label>
+                        <input type="text" name="registrationPlate" class="form-control"
+                               id="truckRegistrationPlate" readonly="readonly">
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Engine</label>
+                        <input type="text" name="engine" class="form-control" id="truckEngine" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Fuel tank (L)</label>
+                        <input type="number" value="0" name="fuelTank" class="form-control" id="truckFuelTank" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Fuel Consumption (L/100km)</label>
+                        <input type="number" value="0" name="fuelConsumption" class="form-control"
+                               id="truckFuelConsumption" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>mileage (km)</label>
+                        <input type="number" value="0" name="mileage" class="form-control" id="truckMileage" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Spare Tires</label>
+                        <input type="number" value="0" name="spareTires" class="form-control" id="truckSpareTires" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Weight (kg)</label>
+                        <input type="number" value="0" name="weight" class="form-control" id="truckWeight" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Payload Capacity (kg)</label>
+                        <input type="number" value="0" name="payloadCapacity" class="form-control"
+                               id="truckPayloadCapacity" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Additional Equipment</label>
+                        <input type="text" name="additionalEquipment" class="form-control"
+                               id="truckAdditionalEquipment" readonly="readonly">
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Price per day (&#8364/day)</label>
+                        <input id="truckPricePerDay" type="number" value="0" name="pricePerDay"
+                               class="form-control" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Truck height (m)</label>
+                        <input type="number" value="0.00" step="0.01" name="truckHeight"
+                               class="form-control" id="truckHeight" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Trailer</label>
+                        <select id="selectTrailer" class="custom-select" name="trailer" disabled="disabled">
+                            <option value="false" selected>No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                    </div>
+                    <div id="trailerInfo" class="d-none">
+                        <div class="form-group">
+                            <label>Trailer length (m)</label>
+                            <input type="number" value="0.00" step="0.01" name="trailerLength"
+                                   class="form-control" id="trailerLength">
+                        </div>
+                        <div class="form-group">
+                            <label>Trailer width (m)</label>
+                            <input type="number" value="0.00" step="0.01" name="trailerWidth"
+                                   class="form-control" id="trailerWidth" readonly="readonly">
+                        </div>
+                        <div class="form-group">
+                            <label>Trailer height (m)</label>
+                            <input type="number" value="0.00" step="0.01" name="trailerHeight"
+                                   class="form-control" id="trailerHeight" readonly="readonly">
+                        </div>
+                        <div class="form-group">
+                            <label>Freight space (kg)</label>
+                            <input type="number" value="0" name="freightSpace" class="form-control"
+                                   id="truckFreightSpace" readonly="readonly">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Picture</label>
+                        <div class="thumbnail-vehicle">
+                            <div class="view-img-vehicle">
+                                <img src="/images/car_placeholder.jpg" id="truckImage">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="fromReserve" enctype="utf8">
+    <div class="modal fade" id="modalReserve" tabindex="-1" role="dialog"
+         aria-labelledby="modalReserveCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalReserveInsertLongTitle"><strong>Reserve a vehicle</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center mx-auto">
+                    <input id="vehicleId" class="d-none"/>
+                    <div class="form-group">
+                        <h4 id="reserveFormInfo"></h4>
+                    </div>
+                    <div class="form-group">
+                        <label>Begining date</label>
+                        <input type="text" id="dateFrom" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label>End date</label>
+                        <input type="text" id="dateTo" class="form-control"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    <button id="btnReserve" type="submit" class="btn btn-primary">Reserve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- Modal Company Info -->
+<div class="modal fade" id="modalCompanyInfo" tabindex="-1" role="dialog"
+     aria-labelledby="modalCompanyInfoCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCompanyInfoLongTitle"><strong>Company Info</strong></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body row">
+                <input type="number" value="-1" id="companyId" name="id" class="d-none" readonly="readonly">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Picture</label>
+                        <div class="thumbnail-vehicle">
+                            <div class="view-img-vehicle" style="height: 100% !important;">
+                                <img  id="companyImg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Company name</label>
+                        <input type ="text" class="form-control" id="companyName" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Company email</label>
+                        <input type ="text" class="form-control" id="companyEmail" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Company phone</label>
+                        <input type ="text" class="form-control" id="companyPhone" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Country</label>
+                        <input type ="text" class="form-control" id="companyCountry" readonly="readonly">
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type ="text" class="form-control" id="companyCity" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type ="text" class="form-control" id="companyAddress" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Zip code</label>
+                        <input type ="text" class="form-control" id="companyZipCode" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label>Bank account</label>
+                        <input type ="text" class="form-control" id="companyBankAccount" readonly="readonly">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+<script src="/js/buyerSearchVehicles.js"></script>
+</body>
+</html>

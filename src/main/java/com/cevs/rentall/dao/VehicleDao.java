@@ -1,10 +1,7 @@
 package com.cevs.rentall.dao;
 
 import com.cevs.rentall.database.Database;
-import com.cevs.rentall.models.Bus;
-import com.cevs.rentall.models.Car;
-import com.cevs.rentall.models.Truck;
-import com.cevs.rentall.models.Vehicle;
+import com.cevs.rentall.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
@@ -93,6 +90,37 @@ public class VehicleDao implements IVehicleDao {
     }
 
     @Override
+    public List<VehicleRenter> getAllVehicleRenterOffersOfType(String search, String table) {
+        List<VehicleRenter> vrList = new ArrayList<>();
+        String sql = "SELECT t.id, t.manufacturer, t.model, t.year, t.fuel_tank, t.mileage, t.engine, " +
+                "t.fuel_consumption, t.spare_tires, t.weight, t.payload_capacity, t.additional_equipment, " +
+                "t.registration_plate, t.vehicle_type, t.vehicle_subtype, t.available, t.price_per_day, " +
+                "t.image, t.renter_id, r.email, (location).country, (location).city, (location).address, " +
+                "(location).zip_code, r.company_name, r.company_phone_number, " +
+                "r.bank_account " +
+                "FROM "+table+" t "+
+                "LEFT JOIN renters r ON t.renter_id = r.id "+
+                "WHERE t.available = ? " +
+                "AND (manufacturer LIKE ? OR model LIKE ? OR engine LIKE ?)";
+        try(Connection conn = db.openConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setBoolean(1,true);
+            for(int i = 2; i<=4; i++){
+                ps.setString(i,search+"%");
+            }
+            ResultSet rs  = ps.executeQuery();
+            while(rs.next()){
+                VehicleRenter vr = populateVehicleRenter(rs);
+                vrList.add(vr);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return vrList;
+    }
+
+
+    @Override
     public Car getCarById(int renterId, int carId) {
         Car car = new Car();
         String sql = "SELECT *FROM cars WHERE renter_id = ? AND id = ?";
@@ -102,33 +130,40 @@ public class VehicleDao implements IVehicleDao {
             ps.setInt(2, carId);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                car.setId(rs.getInt("id"));
-                car.setManufacturer(rs.getString("manufacturer"));
-                car.setModel(rs.getString("model"));
-                car.setYear(rs.getInt("year"));
-                car.setFuelTank(rs.getInt("fuel_tank"));
-                car.setMileage(rs.getInt("mileage"));
-                car.setEngine(rs.getString("engine"));
-                car.setFuelConsumption(rs.getInt("fuel_consumption"));
-                car.setSpareTires(rs.getInt("spare_tires"));
-                car.setWeight(rs.getInt("weight"));
-                car.setPayloadCapacity(rs.getInt("payload_capacity"));
-                car.setAdditionalEquipment(rs.getString("additional_equipment"));
-                car.setRegistrationPlate(rs.getString("registration_plate"));
-                car.setVehicleType(rs.getString("vehicle_type")); //Da li je ovo dobro ili mora ici getObject
-                car.setVehicleSubtype(rs.getString("vehicle_subtype"));
-                car.setAvailable(rs.getBoolean("available"));
-                car.setRenterId(rs.getInt("renter_id"));
-                car.setPricePerDay(rs.getInt("price_per_day"));
-                car.setImage(rs.getString("image"));
-                car.setDoors(rs.getInt("doors"));
-                car.setColor(rs.getString("color"));
-                car.setTrunkCapacity(rs.getInt("trunk_capacity"));
+                car = populateCarObject(rs);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return car;
+    }
+
+    @Override
+    public CarRenter getCarRenterById(int carId) {
+        CarRenter cr = null;
+        String sql = "SELECT ca.id, ca.manufacturer, ca.model, ca.year, ca.fuel_tank, ca.mileage, " +
+                "ca.engine, ca.fuel_consumption, ca.spare_tires, ca.weight, ca.payload_capacity, " +
+                "ca.additional_equipment, ca.registration_plate, ca.vehicle_type, ca.vehicle_subtype, " +
+                "ca.available, ca.price_per_day, ca.image, ca.renter_id, ca.doors, ca.color, ca.trunk_capacity, " +
+                "r.email, (location).country, (location).city, (location).address, (location).zip_code, " +
+                "r.company_name, r.company_phone_number, r.bank_account " +
+                "FROM cars ca " +
+                "LEFT JOIN renters r ON ca.renter_id = r.id " +
+                "WHERE ca.id = ?";
+        try(Connection conn = db.openConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setInt(1, carId);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+               cr = new CarRenter(populateVehicleRenter(rs));
+               cr.setDoors(rs.getInt("doors"));
+               cr.setColor(rs.getString("color"));
+               cr.setTrunkCapacity(rs.getInt("trunk_capacity"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cr;
     }
 
     @Override
@@ -141,37 +176,44 @@ public class VehicleDao implements IVehicleDao {
             ps.setInt(2,renterId);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                truck.setId(rs.getInt("id"));
-                truck.setManufacturer(rs.getString("manufacturer"));
-                truck.setModel(rs.getString("model"));
-                truck.setYear(rs.getInt("year"));
-                truck.setFuelTank(rs.getInt("fuel_tank"));
-                truck.setMileage(rs.getInt("mileage"));
-                truck.setEngine(rs.getString("engine"));
-                truck.setFuelConsumption(rs.getInt("fuel_consumption"));
-                truck.setSpareTires(rs.getInt("spare_tires"));
-                truck.setWeight(rs.getInt("weight"));
-                truck.setPayloadCapacity(rs.getInt("payload_capacity"));
-                truck.setAdditionalEquipment(rs.getString("additional_equipment"));
-                truck.setRegistrationPlate(rs.getString("registration_plate"));
-                truck.setVehicleType(rs.getString("vehicle_type")); //Da li je ovo dobro ili mora ici getObject
-                truck.setVehicleSubtype(rs.getString("vehicle_subtype"));
-                truck.setAvailable(rs.getBoolean("available"));
-                truck.setRenterId(rs.getInt("renter_id"));
-                truck.setPricePerDay(rs.getInt("price_per_day"));
-                truck.setImage(rs.getString("image"));
-
-                truck.setTruckHeight(rs.getFloat("truck_height"));
-                truck.setTrailer(rs.getBoolean("trailer"));
-                truck.setTrailerLength(rs.getFloat("trailer_length"));
-                truck.setTrailerWidth(rs.getFloat("trailer_width"));
-                truck.setTrailerHeight(rs.getFloat("trailer_height"));
-                truck.setFreightSpace(rs.getInt("freight_space"));
+               truck = populateTruckObject(rs);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return truck;
+    }
+
+    @Override
+    public TruckRenter getTruckRenterById(int truckId) {
+        TruckRenter tr = null;
+        String sql = "SELECT t.id, t.manufacturer, t.model, t.year, t.fuel_tank, t.mileage, " +
+                "t.engine, t.fuel_consumption, t.spare_tires, t.weight, t.payload_capacity, " +
+                "t.additional_equipment, t.registration_plate, t.vehicle_type, t.vehicle_subtype, " +
+                "t.available, t.price_per_day, t.image, t.renter_id, t.truck_height, t.trailer, t.trailer_length, " +
+                "t.trailer_width, t.trailer_height, t.freight_space, r.email, (location).country, " +
+                "(location).city, (location).address, (location).zip_code, r.company_name, " +
+                "r.company_phone_number, r.bank_account, r.id " +
+                "FROM trucks t " +
+                "LEFT JOIN renters r ON t.renter_id = r.id " +
+                "WHERE t.id = ?;";
+        try(Connection conn = db.openConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setInt(1,truckId);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                tr = new TruckRenter(populateVehicleRenter(rs));
+                tr.setTrailerHeight(rs.getFloat("truck_height"));
+                tr.setTrailer(rs.getBoolean("trailer"));
+                tr.setTrailerLength(rs.getFloat("trailer_length"));
+                tr.setTrailerWidth(rs.getFloat("trailer_width"));
+                tr.setTrailerHeight(rs.getFloat("trailer_height"));
+                tr.setFreightSpace(rs.getInt("freight_space"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tr;
     }
 
     @Override
@@ -184,34 +226,40 @@ public class VehicleDao implements IVehicleDao {
             ps.setInt(2,busId);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                bus.setId(rs.getInt("id"));
-                bus.setManufacturer(rs.getString("manufacturer"));
-                bus.setModel(rs.getString("model"));
-                bus.setYear(rs.getInt("year"));
-                bus.setFuelTank(rs.getInt("fuel_tank"));
-                bus.setMileage(rs.getInt("mileage"));
-                bus.setEngine(rs.getString("engine"));
-                bus.setFuelConsumption(rs.getInt("fuel_consumption"));
-                bus.setSpareTires(rs.getInt("spare_tires"));
-                bus.setWeight(rs.getInt("weight"));
-                bus.setPayloadCapacity(rs.getInt("payload_capacity"));
-                bus.setAdditionalEquipment(rs.getString("additional_equipment"));
-                bus.setRegistrationPlate(rs.getString("registration_plate"));
-                bus.setVehicleType(rs.getString("vehicle_type")); //Da li je ovo dobro ili mora ici getObject
-                bus.setVehicleSubtype(rs.getString("vehicle_subtype"));
-                bus.setAvailable(rs.getBoolean("available"));
-                bus.setRenterId(rs.getInt("renter_id"));
-                bus.setPricePerDay(rs.getInt("price_per_day"));
-                bus.setImage(rs.getString("image"));
-
-                bus.setSeats(rs.getInt("seats"));
-                bus.setTwoStory(rs.getBoolean("two_story"));
-                bus.setBunkerCapacity(rs.getInt("bunker_capacity"));
+                bus = populateBusObject(rs);
             }
         }catch (SQLException e){
             e.printStackTrace();
         }
         return  bus;
+    }
+
+    @Override
+    public BusRenter getBusRenterById(int busId) {
+        BusRenter br = null;
+        String sql = "SELECT b.id, b.manufacturer, b.model, b.year, b.fuel_tank, b.mileage, " +
+                "b.engine, b.fuel_consumption, b.spare_tires, b.weight, b.payload_capacity, " +
+                "b.additional_equipment, b.registration_plate, b.vehicle_type, b.vehicle_subtype, " +
+                "b.available, b.price_per_day, b.image, b.renter_id, b.seats, b.two_story, b.bunker_capacity, " +
+                "r.email, (location).country, (location).city, (location).address, (location).zip_code, " +
+                "r.company_name, r.company_phone_number, r.bank_account " +
+                "FROM buses b " +
+                "LEFT JOIN renters r ON b.renter_id = r.id " +
+                "WHERE b.id = ? ";
+        try(Connection conn = db.openConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setInt(1,busId);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                br = new BusRenter(populateVehicleRenter(rs));
+                br.setSeats(rs.getInt("seats"));
+                br.setTwoStory(rs.getBoolean("two_story"));
+                br.setBunkerCapacity(rs.getInt("bunker_capacity"));
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return  br;
     }
 
     @Override
@@ -449,5 +497,125 @@ public class VehicleDao implements IVehicleDao {
         } catch (SQLException e) {
             throw new SQLException("Delete failed");
         }
+    }
+
+    private Truck populateTruckObject(ResultSet rs) throws SQLException {
+        Truck truck = new Truck();
+        truck.setId(rs.getInt("id"));
+        truck.setManufacturer(rs.getString("manufacturer"));
+        truck.setModel(rs.getString("model"));
+        truck.setYear(rs.getInt("year"));
+        truck.setFuelTank(rs.getInt("fuel_tank"));
+        truck.setMileage(rs.getInt("mileage"));
+        truck.setEngine(rs.getString("engine"));
+        truck.setFuelConsumption(rs.getInt("fuel_consumption"));
+        truck.setSpareTires(rs.getInt("spare_tires"));
+        truck.setWeight(rs.getInt("weight"));
+        truck.setPayloadCapacity(rs.getInt("payload_capacity"));
+        truck.setAdditionalEquipment(rs.getString("additional_equipment"));
+        truck.setRegistrationPlate(rs.getString("registration_plate"));
+        truck.setVehicleType(rs.getString("vehicle_type")); //Da li je ovo dobro ili mora ici getObject
+        truck.setVehicleSubtype(rs.getString("vehicle_subtype"));
+        truck.setAvailable(rs.getBoolean("available"));
+        truck.setRenterId(rs.getInt("renter_id"));
+        truck.setPricePerDay(rs.getInt("price_per_day"));
+        truck.setImage(rs.getString("image"));
+
+        truck.setTruckHeight(rs.getFloat("truck_height"));
+        truck.setTrailer(rs.getBoolean("trailer"));
+        truck.setTrailerLength(rs.getFloat("trailer_length"));
+        truck.setTrailerWidth(rs.getFloat("trailer_width"));
+        truck.setTrailerHeight(rs.getFloat("trailer_height"));
+        truck.setFreightSpace(rs.getInt("freight_space"));
+        return truck;
+    }
+
+    private Car populateCarObject(ResultSet rs) throws SQLException {
+        Car car = new Car();
+        car.setId(rs.getInt("id"));
+        car.setManufacturer(rs.getString("manufacturer"));
+        car.setModel(rs.getString("model"));
+        car.setYear(rs.getInt("year"));
+        car.setFuelTank(rs.getInt("fuel_tank"));
+        car.setMileage(rs.getInt("mileage"));
+        car.setEngine(rs.getString("engine"));
+        car.setFuelConsumption(rs.getInt("fuel_consumption"));
+        car.setSpareTires(rs.getInt("spare_tires"));
+        car.setWeight(rs.getInt("weight"));
+        car.setPayloadCapacity(rs.getInt("payload_capacity"));
+        car.setAdditionalEquipment(rs.getString("additional_equipment"));
+        car.setRegistrationPlate(rs.getString("registration_plate"));
+        car.setVehicleType(rs.getString("vehicle_type")); //Da li je ovo dobro ili mora ici getObject
+        car.setVehicleSubtype(rs.getString("vehicle_subtype"));
+        car.setAvailable(rs.getBoolean("available"));
+        car.setRenterId(rs.getInt("renter_id"));
+        car.setPricePerDay(rs.getInt("price_per_day"));
+        car.setImage(rs.getString("image"));
+        car.setDoors(rs.getInt("doors"));
+        car.setColor(rs.getString("color"));
+        car.setTrunkCapacity(rs.getInt("trunk_capacity"));
+        return car;
+    }
+
+    private Bus populateBusObject(ResultSet rs) throws SQLException {
+        Bus bus = new Bus();
+        bus.setId(rs.getInt("id"));
+        bus.setManufacturer(rs.getString("manufacturer"));
+        bus.setModel(rs.getString("model"));
+        bus.setYear(rs.getInt("year"));
+        bus.setFuelTank(rs.getInt("fuel_tank"));
+        bus.setMileage(rs.getInt("mileage"));
+        bus.setEngine(rs.getString("engine"));
+        bus.setFuelConsumption(rs.getInt("fuel_consumption"));
+        bus.setSpareTires(rs.getInt("spare_tires"));
+        bus.setWeight(rs.getInt("weight"));
+        bus.setPayloadCapacity(rs.getInt("payload_capacity"));
+        bus.setAdditionalEquipment(rs.getString("additional_equipment"));
+        bus.setRegistrationPlate(rs.getString("registration_plate"));
+        bus.setVehicleType(rs.getString("vehicle_type")); //Da li je ovo dobro ili mora ici getObject
+        bus.setVehicleSubtype(rs.getString("vehicle_subtype"));
+        bus.setAvailable(rs.getBoolean("available"));
+        bus.setRenterId(rs.getInt("renter_id"));
+        bus.setPricePerDay(rs.getInt("price_per_day"));
+        bus.setImage(rs.getString("image"));
+
+        bus.setSeats(rs.getInt("seats"));
+        bus.setTwoStory(rs.getBoolean("two_story"));
+        bus.setBunkerCapacity(rs.getInt("bunker_capacity"));
+        return bus;
+    }
+
+    private VehicleRenter populateVehicleRenter(ResultSet rs) throws SQLException {
+        VehicleRenter vr = new VehicleRenter();
+        vr.setId(rs.getInt("id"));
+        vr.setManufacturer(rs.getString("manufacturer"));
+        vr.setModel(rs.getString("model"));
+        vr.setYear(rs.getInt("year"));
+        vr.setFuelTank(rs.getInt("fuel_tank"));
+        vr.setMileage(rs.getInt("mileage"));
+        vr.setEngine(rs.getString("engine"));
+        vr.setFuelConsumption(rs.getInt("fuel_consumption"));
+        vr.setSpareTires(rs.getInt("spare_tires"));
+        vr.setWeight(rs.getInt("weight"));
+        vr.setPayloadCapacity(rs.getInt("payload_capacity"));
+        vr.setAdditionalEquipment(rs.getString("additional_equipment"));
+        vr.setRegistrationPlate(rs.getString("registration_plate"));
+        vr.setVehicleType(rs.getString("vehicle_type"));
+        vr.setVehicleSubtype(rs.getString("vehicle_subtype"));
+        vr.setAvailable(rs.getBoolean("available"));
+        vr.setPricePerDay(rs.getInt("price_per_day"));
+        vr.setImage(rs.getString("image"));
+        vr.setEmail(rs.getString("email"));
+        vr.setLocation(new Location(
+                rs.getString("country"),
+                rs.getString("city"),
+                rs.getString("address"),
+                rs.getString("zip_code")
+        ));
+        vr.setCompanyName(rs.getString("company_name"));
+        vr.setCompanyPhoneNumber(rs.getString("company_phone_number"));
+        vr.setBankAccount(rs.getString("bank_account"));
+        vr.setCompanyId(rs.getInt("renter_id"));
+        return vr;
     }
 }

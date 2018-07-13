@@ -163,6 +163,22 @@ public class VehicleReservationDao implements IVehicleReservationDao{
         }
     }
 
+    @Override
+    public void reserveVehicle(int vehicleId, Date beginningDate, Date endDate, int buyerId) throws SQLException {
+        String sql = "INSERT INTO vehicles_buyers (vehicle_id, buyer_id, reserve_from, reserve_to) " +
+                "VALUES (?,?,?,?);";
+        try(Connection conn= db.openConnection();
+        PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setInt(1,vehicleId);
+            ps.setInt(2,buyerId);
+            ps.setDate(3,beginningDate);
+            ps.setDate(4,endDate);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Insert failed");
+        }
+    }
+
     public VehicleReservation createVehicleReservationObject(ResultSet rs) throws SQLException {
         VehicleReservation vh = new VehicleReservation();
         vh.setId(rs.getInt("id"));

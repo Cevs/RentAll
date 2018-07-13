@@ -21,19 +21,19 @@ import java.util.Base64;
 import java.util.List;
 
 @Service
-public class VehicleService implements  IVehicleService{
+public class VehicleService implements IVehicleService {
 
     @Autowired
-    IVehicleDao IVehicleDao;
+    IVehicleDao vehicleDao;
 
     @Override
     public boolean addNewCar(CarDto carDto) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User renter = (User) auth.getPrincipal();
-            Car car = new Car(carDto,renter.getId());
+            Car car = new Car(carDto, renter.getId());
             car.setImage(convertToBase64(carDto.getImage()));
-            IVehicleDao.insertCar(car);
+            vehicleDao.insertCar(car);
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -43,43 +43,44 @@ public class VehicleService implements  IVehicleService{
 
     @Override
     public boolean addNewTruck(TruckDto truckDto) {
-        try{
+        try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User renter = (User) auth.getPrincipal();
             Truck truck = new Truck(truckDto, renter.getId());
             truck.setImage(convertToBase64(truckDto.getImage()));
-            IVehicleDao.insertTruck(truck);
+            vehicleDao.insertTruck(truck);
             return true;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return  false;
+        return false;
     }
 
     @Override
     public boolean updateTruck(TruckDto truckDto) {
-        try{
+        try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User renter = (User) auth.getPrincipal();
             Truck truck = new Truck(truckDto, renter.getId());
-            IVehicleDao.updateTruck(truck);
+            vehicleDao.updateTruck(truck);
             return true;
-        }catch (SQLException e){
-            e.printStackTrace();;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            ;
         }
         return false;
     }
 
     @Override
     public boolean addNewBus(BusDto busDto) {
-        try{
+        try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User renter = (User) auth.getPrincipal();
             Bus bus = new Bus(busDto, renter.getId());
             bus.setImage(convertToBase64(busDto.getImage()));
-            IVehicleDao.insertBus(bus);
+            vehicleDao.insertBus(bus);
             return true;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
@@ -87,13 +88,13 @@ public class VehicleService implements  IVehicleService{
 
     @Override
     public boolean updateBus(BusDto busDto) {
-        try{
+        try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User renter = (User) auth.getPrincipal();
             Bus bus = new Bus(busDto, renter.getId());
-            IVehicleDao.updateBus(bus);
-            return  true;
-        }catch (SQLException e){
+            vehicleDao.updateBus(bus);
+            return true;
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
@@ -101,12 +102,12 @@ public class VehicleService implements  IVehicleService{
 
     @Override
     public boolean deleteVehicle(int vehicleId) {
-        try{
+        try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User renter = (User) auth.getPrincipal();
-            IVehicleDao.deleteVehicle(renter.getId(), vehicleId);
+            vehicleDao.deleteVehicle(renter.getId(), vehicleId);
             return true;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
@@ -114,14 +115,14 @@ public class VehicleService implements  IVehicleService{
 
     @Override
     public boolean updateCar(CarDto carDto) {
-        try{
+        try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User renter = (User) auth.getPrincipal();
             Car car = new Car(carDto, renter.getId());
             car.setImage(convertToBase64(carDto.getImage()));
-            IVehicleDao.updateCar(car);
+            vehicleDao.updateCar(car);
             return true;
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
@@ -131,46 +132,76 @@ public class VehicleService implements  IVehicleService{
     public List<Vehicle> getAllVehicles(String search) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User renter = (User) auth.getPrincipal();
-        return IVehicleDao.getRenterVehicles(renter.getId(),search);
+        return vehicleDao.getRenterVehicles(renter.getId(), search);
     }
 
     @Override
     public List<Vehicle> getAllVehiclesOfType(String vehicleType, String search) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User renter = (User) auth.getPrincipal();
-        return IVehicleDao.getRenterVehiclesOfType(renter.getId(), vehicleType, search);
+        return vehicleDao.getRenterVehiclesOfType(renter.getId(), vehicleType, search);
     }
 
     @Override
     public Car findCarById(int carId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User renter = (User) auth.getPrincipal();
-        return  IVehicleDao.getCarById(renter.getId(), carId);
+        return vehicleDao.getCarById(renter.getId(), carId);
     }
 
     @Override
     public Truck findTruckById(int truckId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User renter = (User) auth.getPrincipal();
-        return IVehicleDao.getTruckById(renter.getId(), truckId);
+        return vehicleDao.getTruckById(renter.getId(), truckId);
     }
 
     @Override
     public Bus findBusById(int busId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User renter = (User) auth.getPrincipal();
-        return  IVehicleDao.getBusById(renter.getId(), busId);
+        return vehicleDao.getBusById(renter.getId(), busId);
+    }
+
+    @Override
+    public CarRenter findCarRenterById(int carId) {
+        return vehicleDao.getCarRenterById(carId);
+    }
+
+    @Override
+    public TruckRenter findTruckRenterById(int truckId) {
+        return vehicleDao.getTruckRenterById(truckId);
+    }
+
+    @Override
+    public BusRenter findBusRenterById(int busId) {
+        return vehicleDao.getBusRenterById(busId);
+    }
+
+    @Override
+    public List<VehicleRenter> getAllVehicleRenterOffersOfType(String search, String type) {
+        String table = "";
+        if(type.equals("Truck")){
+            table = "trucks";
+        }else if(type.equals("Car")){
+            table = "cars";
+        }else if(type.equals("Bus")){
+            table = "buses";
+        }else{
+            table = "vehicles";
+        }
+        return vehicleDao.getAllVehicleRenterOffersOfType(search, table);
     }
 
 
-    public String convertToBase64(MultipartFile image){
+    public String convertToBase64(MultipartFile image) {
         try {
-            byte[]  encoded = Base64.getEncoder().encode(image.getBytes());
+            byte[] encoded = Base64.getEncoder().encode(image.getBytes());
             return (new String(encoded));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return  "";
+        return "";
 
     }
 }

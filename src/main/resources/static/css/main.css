@@ -156,5 +156,11 @@ td input{
     padding-left:5px;
 }
 
+.card-deck .card {
+    flex:none !important;
+    width:30%;
+}
 
-
+.card-deck{
+    margin-bottom:25px;
+}

@@ -8,7 +8,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
@@ -68,5 +71,32 @@ public class VehicleReservationImpl implements IVehicleReservations{
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public boolean reserveVehicle(int vehicleId, String dateFrom, String dateTo) {
+        try{
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            User buyer = (User) auth.getPrincipal();
+            Date startDate = convertToSqlDate(dateFrom);
+            Date endDate = convertToSqlDate(dateTo);
+            vehicleReservationDao.reserveVehicle(vehicleId, startDate, endDate, buyer.getId());
+            return true;
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public Date convertToSqlDate(String sDate){
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("mm/dd/yyyy");
+            java.util.Date parsed = sdf.parse(sDate);
+            Date sqlDate = new Date(parsed.getTime());
+            return  sqlDate;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

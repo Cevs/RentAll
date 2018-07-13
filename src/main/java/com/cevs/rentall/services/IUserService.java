@@ -4,6 +4,7 @@ import com.cevs.rentall.dto.BuyerDto;
 import com.cevs.rentall.dto.RenterDto;
 import com.cevs.rentall.models.Buyer;
 import com.cevs.rentall.models.Renter;
+import com.cevs.rentall.models.RenterInfo;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -15,5 +16,6 @@ public interface IUserService {
     boolean updateProfile(RenterDto renterDto);
     boolean updateProfile(BuyerDto buyerDto);
     Renter getRenterProfileInfo();
+    RenterInfo getRenterInfo(int id);
     Buyer getBuyerProfileInfo();
 }

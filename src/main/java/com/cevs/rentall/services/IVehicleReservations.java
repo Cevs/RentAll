@@ -11,4 +11,5 @@ public interface IVehicleReservations {
     List<VehicleReservation> getReservations(String vehicle, String status, String search);
     boolean deleteReservation(int reservationId);
     boolean updateReservationStatus(int reservationId, String status);
+    boolean reserveVehicle(int vehicleId, String beginningDate, String endDate);
 }

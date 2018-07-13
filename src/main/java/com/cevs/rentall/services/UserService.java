@@ -3,10 +3,7 @@ package com.cevs.rentall.services;
 import com.cevs.rentall.dao.IUserDao;
 import com.cevs.rentall.dto.BuyerDto;
 import com.cevs.rentall.dto.RenterDto;
-import com.cevs.rentall.models.Buyer;
-import com.cevs.rentall.models.Location;
-import com.cevs.rentall.models.Renter;
-import com.cevs.rentall.models.User;
+import com.cevs.rentall.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -87,6 +84,11 @@ public class UserService implements IUserService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User renter = (User) auth.getPrincipal();
         return userDao.getRenterProfileInfo(renter.getId());
+    }
+
+    @Override
+    public RenterInfo getRenterInfo(int id) {
+        return userDao.getRenterInfo(id);
     }
 
     @Override

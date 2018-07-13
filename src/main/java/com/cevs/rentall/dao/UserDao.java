@@ -1,10 +1,7 @@
 package com.cevs.rentall.dao;
 
 import com.cevs.rentall.database.Database;
-import com.cevs.rentall.models.Buyer;
-import com.cevs.rentall.models.Location;
-import com.cevs.rentall.models.Renter;
-import com.cevs.rentall.models.User;
+import com.cevs.rentall.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
@@ -15,6 +12,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.*;
+import java.util.Base64;
 
 @Service
 public class UserDao implements IUserDao {
@@ -283,6 +281,37 @@ public class UserDao implements IUserDao {
         return buyer;
     }
 
+    @Override
+    public RenterInfo getRenterInfo(int renterId) {
+        RenterInfo ri = new RenterInfo();
+        String sql = "SELECT email, (location).country, " +
+                "(location).city, (location).address, (location).zip_code, image, " +
+                "company_name, company_phone_number, bank_account " +
+                "FROM renters WHERE id = ?";
+        try(Connection conn = db.openConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setInt(1,renterId);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                ri.setEmail(rs.getString("email"));
+                Location loc = new Location();
+                loc.setCountry(rs.getString("country"));
+                loc.setCity(rs.getString("city"));
+                loc.setAddress(rs.getString("address"));
+                loc.setZipCode(rs.getString("zip_code"));
+                ri.setLocation(loc);
+                byte[] imgBytes = rs.getBytes("image");
+                ri.setImage(convertToBase64(convertToMultipart(imgBytes)));
+                ri.setCompanyName(rs.getString("company_name"));
+                ri.setCompanyPhoneNumber(rs.getString("company_phone_number"));
+                ri.setBankAccount(rs.getString("bank_account"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ri;
+    }
+
     private MultipartFile convertToMultipart(byte[] imgBytes) {
         try {
             Path path = Files.createTempFile("image",".png");
@@ -295,5 +324,16 @@ public class UserDao implements IUserDao {
             e.printStackTrace();
         }
         return  null;
+    }
+
+    public String convertToBase64(MultipartFile image) {
+        try {
+            byte[] encoded = Base64.getEncoder().encode(image.getBytes());
+            return (new String(encoded));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+
     }
 }

@@ -3,14 +3,12 @@ package com.cevs.rentall.controllers.rest;
 import com.cevs.rentall.dto.BuyerDto;
 import com.cevs.rentall.dto.RenterDto;
 import com.cevs.rentall.dto.com.cevs.rentall.dto.validation.ValidEmail;
+import com.cevs.rentall.models.Renter;
 import com.cevs.rentall.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 

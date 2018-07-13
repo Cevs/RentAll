@@ -3,6 +3,7 @@ package com.cevs.rentall.dao;
 import com.cevs.rentall.dto.RenterDto;
 import com.cevs.rentall.models.Buyer;
 import com.cevs.rentall.models.Renter;
+import com.cevs.rentall.models.RenterInfo;
 import com.cevs.rentall.models.User;
 
 import java.sql.SQLException;
@@ -17,4 +18,5 @@ public interface IUserDao {
     void updateBuyer(Buyer  buyer) throws SQLException;
     Renter getRenterProfileInfo(int renterId);
     Buyer getBuyerProfileInfo(int buyerId);
+    RenterInfo getRenterInfo(int renterId);
 }

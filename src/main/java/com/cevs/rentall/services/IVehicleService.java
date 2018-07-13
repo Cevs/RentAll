@@ -3,10 +3,7 @@ package com.cevs.rentall.services;
 import com.cevs.rentall.dto.BusDto;
 import com.cevs.rentall.dto.CarDto;
 import com.cevs.rentall.dto.TruckDto;
-import com.cevs.rentall.models.Bus;
-import com.cevs.rentall.models.Car;
-import com.cevs.rentall.models.Truck;
-import com.cevs.rentall.models.Vehicle;
+import com.cevs.rentall.models.*;
 
 import java.util.List;
 
@@ -23,4 +20,8 @@ public interface IVehicleService {
     Car findCarById(int carId);
     Truck findTruckById(int truckId);
     Bus findBusById(int busId);
+    CarRenter findCarRenterById(int carId);
+    TruckRenter findTruckRenterById(int truckId);
+    BusRenter findBusRenterById(int busId);
+    List<VehicleRenter> getAllVehicleRenterOffersOfType(String search, String type);
 }
