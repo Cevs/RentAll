@@ -81,6 +81,7 @@ public class VehicleDao implements IVehicleDao {
                 v.setVehicleSubtype(rs.getString("vehicle_subtype"));
                 v.setAvailable(rs.getBoolean("available"));
                 v.setPricePerDay(rs.getInt("price_per_day"));
+                v.setImage(rs.getString("image"));
                 vehicles.add(v);
             }
         } catch (SQLException e) {
