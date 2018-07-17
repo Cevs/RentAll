@@ -455,7 +455,7 @@ public class VehicleDao implements IVehicleDao {
     public void updateBus(Bus bus) throws SQLException {
         String sql = "UPDATE buses SET manufacturer = ?, model = ?, year = ?, fuel_tank = ?, mileage = ?, engine = ?, " +
                 "fuel_consumption = ?, spare_tires = ?, weight = ?, payload_capacity = ?, additional_equipment = ?, " +
-                "registration_plate = ?, vehicle_subtype = ?, available = ?, price_per_day = ? seats = ?, " +
+                "registration_plate = ?, vehicle_subtype = ?, available = ?, price_per_day = ?, seats = ?, " +
                 "two_story = ?, bunker_capacity = ? " +
                 "WHERE id = ? AND renter_id = ?;";
         try(Connection conn = db.openConnection();
